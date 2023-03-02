@@ -4,9 +4,6 @@ class SubscriptionRecord < ApplicationRecord
     belongs_to :employee
     has_many :payment_records
 
-    validates_associated :client
-    validates_associated :subscription_type
-    validates_associated :employee
-    validates_associated :payment_record
+    validates_associated :payment_records
     
 end  

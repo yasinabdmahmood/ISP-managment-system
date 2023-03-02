@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_02_102319) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_02_183638) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "client_contact_informations", force: :cascade do |t|
-    t.string "contact_information"
+  create_table "client_contact_information", force: :cascade do |t|
+    t.string "contact_info"
     t.bigint "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["client_id"], name: "index_client_contact_informations_on_client_id"
+    t.index ["client_id"], name: "index_client_contact_information_on_client_id"
   end
 
   create_table "clients", force: :cascade do |t|
@@ -29,12 +29,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_102319) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "employee_contact_informations", force: :cascade do |t|
+  create_table "employee_contact_information", force: :cascade do |t|
     t.string "contact_info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "employees_id"
-    t.index ["employees_id"], name: "index_employee_contact_informations_on_employees_id"
+    t.bigint "employee_id"
+    t.index ["employee_id"], name: "index_employee_contact_information_on_employee_id"
   end
 
   create_table "employees", force: :cascade do |t|
@@ -60,21 +60,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_02_102319) do
     t.bigint "employee_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_fully_paid"
     t.index ["client_id"], name: "index_subscription_records_on_client_id"
     t.index ["employee_id"], name: "index_subscription_records_on_employee_id"
     t.index ["subscription_type_id"], name: "index_subscription_records_on_subscription_type_id"
   end
 
   create_table "subscription_types", force: :cascade do |t|
-    t.string "type"
+    t.string "category"
     t.decimal "cost"
     t.decimal "profit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "client_contact_informations", "clients"
-  add_foreign_key "employee_contact_informations", "employees", column: "employees_id"
+  add_foreign_key "client_contact_information", "clients"
+  add_foreign_key "employee_contact_information", "employees"
   add_foreign_key "payment_records", "employees"
   add_foreign_key "payment_records", "subscription_records"
   add_foreign_key "subscription_records", "clients"
