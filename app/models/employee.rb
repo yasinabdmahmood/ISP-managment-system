@@ -6,7 +6,7 @@ class Employee < ApplicationRecord
     validates_associated :employee_contact_information
     validates_associated :subscription_record
     validates_associated :payment_record
-    validates :name, presence: true, length: { minimum: 3, maximum: 30 }
+    validates :name, uniqueness: true, presence: true, length: { minimum: 3, maximum: 30 }
     validates :role, presence: true, inclusion: { in: %w(admin employee) }
     
 end

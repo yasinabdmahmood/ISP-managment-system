@@ -4,7 +4,7 @@ class Client < ApplicationRecord
 
     validates_associated :client_contact_information
     validates_associated :subscription_record
-    validates :name, presence: true, length: { minimum: 3, maximum: 30 }
-    validates :username, length: { minimum: 3, maximum: 30 }
+    validates :name, presence: true, uniqueness: true, length: { minimum: 3, maximum: 30 }
+    validates :username, uniqueness: true, length: { minimum: 3, maximum: 30 }
     
 end

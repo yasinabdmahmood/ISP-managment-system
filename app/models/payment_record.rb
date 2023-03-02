@@ -4,6 +4,6 @@ class PaymentRecord < ApplicationRecord
 
     validates_associated :subscription_record
     validates_associated :employee
-    validates :amount, numericality: true
+    validates :amount, numericality: true, presence: true
 end
   
