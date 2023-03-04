@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'payment_record/index'
   get 'subscription_record/index'
   get 'subscription_type/index'
   get 'client/index'
