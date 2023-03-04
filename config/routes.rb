@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   get 'subscription_record/index'
 
-  # resource :subscription_types
+  resource :subscription_types
   
   get '/subscription_types/index'
   get '/subscription_types/new'
