@@ -4,11 +4,13 @@ Rails.application.routes.draw do
   get 'payment_record/index'
 
   get 'subscription_record/index'
+
+  # resource :subscription_types
   
-  get '/subscription_type/index'
-  get '/subscription_type/new'
-  get '/subscription_type/:id' => 'subscription_type#destroy', as: 'destroy_subscription_type'
-  post 'subscription_type/create'
+  get '/subscription_types/index'
+  get '/subscription_types/new'
+  get '/subscription_types/:id' => 'subscription_types#destroy', as: 'destroy_subscription_types'
+  post 'subscription_types/create'
  
 
   get 'client/index'

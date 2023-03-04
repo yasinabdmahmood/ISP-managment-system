@@ -1,5 +1,5 @@
 <div class="container p-3 d-flex flex-column align-items-stretch">
-<%= form_with model: @new_subscription_type, url: subscription_type_create_path, method: :post, local: true, scope: :new_subscription_type do |f| %>
+<%= form_with model: @new_subscription_type, url: subscription_types_create_path, method: :post, local: true, scope: :new_subscription_type do |f| %>
     <div class="form-group">
     <%= f.label :Type %><br>
     <%= f.text_field :category,class:"form-control" %>

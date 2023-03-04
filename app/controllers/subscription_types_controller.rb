@@ -1,4 +1,4 @@
-class SubscriptionTypeController < ApplicationController
+class SubscriptionTypesController < ApplicationController
   def index
     @subscription_types = SubscriptionType.all
   end
@@ -11,14 +11,14 @@ class SubscriptionTypeController < ApplicationController
     @subscription_type = SubscriptionType.find(params[:id])
     @subscription_type.destroy
 
-    redirect_to subscription_type_index_path, notice: "User was successfully deleted."
+    redirect_to subscription_types_index_path, notice: "User was successfully deleted."
   end
 
   
   def create
     @new_subscription_type = SubscriptionType.new(subscription_type_params)
     if @new_subscription_type.save
-      redirect_to subscription_type_index_path
+      redirect_to subscription_types_index_path
     else
       redirect_to :new
     end

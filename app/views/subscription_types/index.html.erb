@@ -18,7 +18,7 @@
                     <td><%= subscription_type.cost %></td>
                     <td><%= subscription_type.profit %></td>
                     <td>
-                      <%= link_to "Delete", destroy_subscription_type_path(id: subscription_type.id), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
+                      <%= link_to "Delete", destroy_subscription_types_path(id: subscription_type.id), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
                     </td>
                 </tr>
                 <% end %>
@@ -26,5 +26,5 @@
         </table>
     </div>
 </div>
-<%= link_to "Create new subscription type", subscription_type_new_path, class: "btn btn-primary" %>
+<%= link_to "Create new subscription type", subscription_types_new_path, class: "btn btn-primary" %>
 
