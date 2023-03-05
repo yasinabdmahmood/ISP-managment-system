@@ -8,6 +8,7 @@
                 <th>Name</th>
                 <th>username</th>
                 <th>Contact info</th>
+                <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -15,7 +16,17 @@
                 <tr>
                     <td><%= client.name %></td>
                     <td><%= client.username %></td>
-                    <td><%= client.client_contact_informations.first.contact_info %></td>
+                    <td>
+                        <% if client.client_contact_informations.first.try(:contact_info).present? %>
+                         <%= client.client_contact_informations.first.contact_info %>
+                        <% else %>
+                         No contact information
+                        <% end %>
+                    </td>
+                    <td>
+                      <%= link_to 'Delete', destroy_client_path(client), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+                      <%= link_to "Edit", edit_client_path(client), class: "btn btn-primary" %>
+                    </td>
                 </tr>
                 <% end %>
             </tbody>

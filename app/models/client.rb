@@ -1,6 +1,7 @@
 class Client < ApplicationRecord
-    has_many :client_contact_informations
-    has_many :subscription_records
+    has_many :client_contact_informations, dependent: :destroy
+    accepts_nested_attributes_for :client_contact_informations
+    has_many :subscription_records, dependent: :destroy
 
     validates_associated :client_contact_informations
     validates_associated :subscription_records

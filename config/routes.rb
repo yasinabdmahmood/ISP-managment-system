@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   # client related routes
   get '/clients' => 'clients#index', as: 'clients'
   get '/client/new' => 'clients#new', as: 'new_client'
+  post '/client/create' => 'clients#create', as: 'create_client'
   get '/client/delete/:id' => 'clients#destroy', as: 'destroy_client'
   post '/client/update/:id' => 'clients#update', as: 'update_client'
   get '/client/edit/:id' => 'clients#edit', as: 'edit_client'
