@@ -1,13 +1,14 @@
+<h1>Edit subscription type</h1>
 <div class="container p-3 d-flex flex-column align-items-stretch">
-<%= form_with model: @new_subscription_type, url: subscription_types_path, method: :post, local: true, scope: :new_subscription_type do |f| %>
+<%= form_with model: @subscription_type, url: update_subscription_type_path(id: params[:id]), method: :post, local: true, scope: :new_subscription_type do |f| %>
     <div class="form-group">
-    <%= f.label :Type %><br>
-    <%= f.text_field :category,class:"form-control" %>
+        <%= f.label :Type %><br>
+        <%= f.text_field :category,class:"form-control" %>
     </div>
 
     <div class="form-group">
     <%= f.label :Cost %><br>
-    <%= f.number_field  :cost,class:"form-control"%>
+    <%= f.number_field  :cost, class:"form-control"%>
     </div>
 
     <div class="form-group">
