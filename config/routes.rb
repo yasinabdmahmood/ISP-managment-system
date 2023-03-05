@@ -12,7 +12,8 @@ Rails.application.routes.draw do
   resources :subscription_types
   
   # client related routes
-  get 'client/index'
+  get '/clients' => 'clients#index', as: 'clients'
+  get '/client/new' => 'clients#new', as: 'new_client'
   get '/client/delete/:id' => 'clients#destroy', as: 'destroy_client'
   post '/client/update/:id' => 'clients#update', as: 'update_client'
   get '/client/edit/:id' => 'clients#edit', as: 'edit_client'
