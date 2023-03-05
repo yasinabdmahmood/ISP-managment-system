@@ -5,13 +5,17 @@ Rails.application.routes.draw do
 
   get 'subscription_record/index'
 
-
+  # subscription type related routes
   get '/subscription_types/delete/:id' => 'subscription_types#destroy', as: 'destroy_subscription_type'
   post '/subscription_types/update/:id' => 'subscription_types#update', as: 'update_subscription_type'
   get '/subscription_types/edit/:id' => 'subscription_types#edit', as: 'edit_subscription_type'
   resources :subscription_types
- 
+  
+  # client related routes
   get 'client/index'
+  get '/client/delete/:id' => 'clients#destroy', as: 'destroy_client'
+  post '/client/update/:id' => 'clients#update', as: 'update_client'
+  get '/client/edit/:id' => 'clients#edit', as: 'edit_client'
  
   get 'employee/index'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
