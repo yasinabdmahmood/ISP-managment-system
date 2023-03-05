@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get 'payment_record/index'
 
-  get 'subscription_record/index'
+  get 'subscription_records'=> 'subscription_records#index', as: 'subscription_records'
 
   # subscription type related routes
   get '/subscription_types/delete/:id' => 'subscription_types#destroy', as: 'destroy_subscription_type'
