@@ -9,7 +9,16 @@ class SubscriptionRecordsController < ApplicationController
     @clients = Client.all 
   end
 
-  # def subscription_record_params
-  #   params.require(:product).permit(:pay, :client_id, :subscription_type_id)
-  # end
+  def create
+    @new_subscription_record = SubscriptionRecord.new(subscription_record_params)
+    if @new_subscription_record.save
+     redirect_to subscription_records_path
+    else
+      redirect_to new_subscription_record_path
+    end
+  end
+
+  def subscription_record_params
+    params.require(:new_subscription_record).permit(:pay, :client_id, :subscription_type_id, :employee_id)
+  end
 end

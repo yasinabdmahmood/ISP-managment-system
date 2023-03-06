@@ -5,5 +5,6 @@ class SubscriptionRecord < ApplicationRecord
     has_many :payment_records
 
     validates_associated :payment_records
+    validates :pay, presence: true 
     
 end  
