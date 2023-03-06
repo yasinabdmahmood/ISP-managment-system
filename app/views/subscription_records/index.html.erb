@@ -23,7 +23,6 @@
                     <td><%= subscription_record.is_fully_paid? ? 'Yes' : 'No' %></td>
                     <td>
                         <%= link_to 'Delete', destroy_subscription_record_path(subscription_record), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-                        <%= link_to "Edit", edit_subscription_record_path(id: subscription_record.id), class: "btn btn-primary" %>
                   </td>
                 </tr>
                 <% end %>
