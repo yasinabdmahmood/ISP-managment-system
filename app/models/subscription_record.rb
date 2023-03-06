@@ -5,7 +5,7 @@ class SubscriptionRecord < ApplicationRecord
     belongs_to :client
     belongs_to :subscription_type
     belongs_to :employee
-    has_many :payment_records
+    has_many :payment_records, :dependent => :destroy
 
     validates_associated :payment_records
     validates :pay, presence: true 

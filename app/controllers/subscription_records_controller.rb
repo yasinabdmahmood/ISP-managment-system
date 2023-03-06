@@ -19,6 +19,13 @@ class SubscriptionRecordsController < ApplicationController
     end
   end
 
+  def destroy
+    @subscription_record = SubscriptionRecord.find(params[:id])
+    if @subscription_record.destroy
+      redirect_to subscription_records_path
+    end
+  end
+
   def subscription_record_params
     params.require(:new_subscription_record).permit(:pay, :client_id, :subscription_type_id, :employee_id)
   end
