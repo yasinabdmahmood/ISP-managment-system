@@ -1,4 +1,7 @@
 class SubscriptionRecord < ApplicationRecord
+    after_create :create_payment_record
+
+
     belongs_to :client
     belongs_to :subscription_type
     belongs_to :employee
@@ -6,5 +9,11 @@ class SubscriptionRecord < ApplicationRecord
 
     validates_associated :payment_records
     validates :pay, presence: true 
+
+    private
+
+    def create_payment_record
+        PaymentRecord.create(employee: self.employee,subscription_record: self,amount: self.pay)
+    end
     
 end  

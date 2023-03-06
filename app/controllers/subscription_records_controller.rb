@@ -12,6 +12,7 @@ class SubscriptionRecordsController < ApplicationController
   def create
     @new_subscription_record = SubscriptionRecord.new(subscription_record_params)
     if @new_subscription_record.save
+      # @new_payment_record = PaymentRecord.new(employee: @current_user, subscription_record: @new_subscription_record,)
      redirect_to subscription_records_path
     else
       redirect_to new_subscription_record_path

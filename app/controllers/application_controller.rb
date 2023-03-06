@@ -5,6 +5,6 @@ class ApplicationController < ActionController::Base
     private
   
     def set_user
-      @current_user_id = Employee.first.id
+      @current_user = Employee.first
     end
 end
