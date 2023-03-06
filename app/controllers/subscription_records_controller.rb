@@ -26,6 +26,19 @@ class SubscriptionRecordsController < ApplicationController
     end
   end
 
+  def edit
+    @subscription_record = SubscriptionRecord.find(params[:id])
+    p @subscription_record
+    @subscription_types = SubscriptionType.all
+    @clients = Client.all 
+  end
+
+  def update
+  end
+
+
+  private
+
   def subscription_record_params
     params.require(:new_subscription_record).permit(:pay, :client_id, :subscription_type_id, :employee_id)
   end

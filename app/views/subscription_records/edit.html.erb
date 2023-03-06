@@ -1,0 +1,23 @@
+<h1>Edit subscription record</h1>
+<%= form_with model: @subscription_record, url: update_subscription_record_path(id: @subscription_record.id), method: :post, local: true, scope: :new_subscription_record do |f| %>
+    
+    <div class="form-group">
+    <%= f.label :client_id %><br>
+    <%= f.collection_select(:client_id, @clients, :id, :name, selected: @subscription_record.client_id) %>
+    </div>
+    
+    <%= f.hidden_field :employee_id, value: @current_user.id %>
+
+    <div class="form-group">
+    <%= f.label :subscription_type_id %><br>
+    <%= f.collection_select(:subscription_type_id, @subscription_types, :id, :category, selected: @subscription_record.subscription_type_id) %>
+    </div>
+
+    <div class="form-group">
+    <%= f.label :'Initial pay' %><br>
+    <%= f.number_field  :pay,class:"form-control"%>
+    </div>
+
+    <%= f.submit "Save",class:"btn btn-primary" %>
+<% end %>
+</div>

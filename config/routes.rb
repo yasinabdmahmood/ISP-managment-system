@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   get 'subscription_record/new'=> 'subscription_records#new', as: 'new_subscription_record'
   post 'subscription_record/create'=> 'subscription_records#create', as: 'create_subscription_record'
   get '/subscription_record/delete/:id' => 'subscription_records#destroy', as: 'destroy_subscription_record'
+  get '/subscription_record/edit/:id' => 'subscription_records#edit', as: 'edit_subscription_record'
+  get '/subscription_record/update/:id' => 'subscription_records#update', as: 'update_subscription_record'
 
   # subscription type related routes
   get '/subscription_types/delete/:id' => 'subscription_types#destroy', as: 'destroy_subscription_type'
