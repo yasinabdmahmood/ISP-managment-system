@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :employees
   root "employee#index"
   #payment record related routes
   get 'payment_records/index'
