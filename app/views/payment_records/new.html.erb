@@ -1,0 +1,14 @@
+<h1>Create new payment</h1>
+<div class="container p-3 d-flex flex-column align-items-stretch">
+<%= form_with model: @new_payment_record, url: create_payment_record_path, method: :post, local: true, scope: :new_payment_record do |f| %>
+    
+    <%= f.hidden_field :subscription_record_id, value: params[:id] %>
+
+    <div class="form-group">
+    <%= f.label :Amount %><br>
+    <%= f.number_field  :amount,class:"form-control"%>
+    </div>
+
+    <%= f.submit "Save",class:"btn btn-primary" %>
+<% end %>
+</div>

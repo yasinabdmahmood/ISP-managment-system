@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   root "employee#index"
   #payment record related routes
   get 'payment_records/index'
-  get 'payment_record/new'=> 'payment_record#new', as: 'new_payment_record'
+  get 'payment_record/new/:id'=> 'payment_records#new', as: 'new_payment_record'
+  post 'payment_record/create/:id'=> 'payment_records#create', as: 'create_payment_record'
 
   # subscription record related routes
   get 'subscription_records'=> 'subscription_records#index', as: 'subscription_records'
