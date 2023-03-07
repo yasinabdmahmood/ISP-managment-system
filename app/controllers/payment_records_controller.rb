@@ -1,4 +1,4 @@
-class PaymentRecordController < ApplicationController
+class PaymentRecordsController < ApplicationController
   def index
     @payment_records = PaymentRecord.all
   end
