@@ -15,7 +15,10 @@
                 <tr>
                     <td><%= employee.name %></td>
                     <td><%= employee.role %></td>
-                    <td><%= employee.employee_contact_information.first&.contact_info || 'No contact info' %></td>
+                    <td>
+                        <%= employee.employee_contact_information.first&.contact_info || 'No contact info' %>
+                        <%= link_to 'Add', new_employee_contact_information_path, method: :post, class: 'btn btn-primary' %>
+                    </td>
                 </tr>
                 <% end %>
             </tbody>

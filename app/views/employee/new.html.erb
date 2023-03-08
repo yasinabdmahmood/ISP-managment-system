@@ -1,0 +1,14 @@
+<h1>Add contact information</h1>
+<div class="container p-3 d-flex flex-column align-items-stretch">
+<%= form_with model: @employee_contact_information, url: create_employee_contact_information_path, method: :post, local: true, scope: :new_employee_contact_information do |f| %>
+     
+    <%= f.hidden_field :employee_id, value: current_employee.id %>
+    
+    <div class="form-group">
+    <%= f.label :'Contact information' %><br>
+    <%= f.text_field  :contact_info,class:"form-control"%>
+    </div>
+
+    <%= f.submit "Save",class:"btn btn-primary" %>
+<% end %>
+</div>

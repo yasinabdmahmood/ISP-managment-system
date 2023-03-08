@@ -12,8 +12,13 @@ class SubscriptionRecordsController < ApplicationController
   def create
     @new_subscription_record = SubscriptionRecord.new(subscription_record_params)
     if @new_subscription_record.save
-     @new_payment_record = PaymentRecord.create(employee: current_employee, subscription_record: @new_subscription_record,amount: @new_subscription_record.pay)
-     redirect_to subscription_records_path
+     @new_payment_record = PaymentRecord.new(employee: current_employee, subscription_record: @new_subscription_record,amount: @new_subscription_record.pay)
+     if @new_payment_record.save
+      redirect_to subscription_records_path
+     else
+       flash[:alert] = @new_payment_record.errors.full_messages.join(", ")
+     end
+     
     else
       redirect_to new_subscription_record_path
     end
