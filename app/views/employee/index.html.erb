@@ -15,7 +15,7 @@
                 <tr>
                     <td><%= employee.name %></td>
                     <td><%= employee.role %></td>
-                    <td><%= employee.employee_contact_information.first.contact_info %></td>
+                    <td><%= employee.employee_contact_information.first&.contact_info || 'No contact info' %></td>
                 </tr>
                 <% end %>
             </tbody>

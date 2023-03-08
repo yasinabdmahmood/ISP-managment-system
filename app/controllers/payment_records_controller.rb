@@ -9,7 +9,7 @@ class PaymentRecordsController < ApplicationController
 
   def create
     @new_payment_record =PaymentRecord.new(payment_record_params)
-    @new_payment_record.employee = @current_user
+    @new_payment_record.employee = current_employee
     if @new_payment_record.save
       @new_payment_record.subscription_record.update(pay: @new_payment_record.subscription_record.pay += @new_payment_record.amount)
       redirect_to subscription_records_path

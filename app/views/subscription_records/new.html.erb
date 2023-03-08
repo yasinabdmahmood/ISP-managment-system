@@ -7,7 +7,7 @@
     <%= f.collection_select(:client_id, @clients, :id, :name) %>
     </div>
     
-    <%= f.hidden_field :employee_id, value: @current_user.id %>
+    <%= f.hidden_field :employee_id, value: current_employee.id %>
 
     <div class="form-group">
     <%= f.label :subscription_type_id %><br>

@@ -7,11 +7,11 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 employees = Employee.create([
-    { name: "employee1", role: "admin" },
-    { name: "employee2", role: "employee" },
-    { name: "employee3", role: "employee" },
-    { name: "employee4", role: "employee" },
-    { name: "employee5", role: "employee" },
+    { name: "Yaseen", role: "admin", email: 'abd181103@gmail.com', password: '123456'},
+    { name: "employee2", role: "employee", email: 'employee2@gmail.com', password: '123456' },
+    { name: "employee3", role: "employee", email: 'employee3@gmail.com', password: '123456' },
+    { name: "employee4", role: "employee", email: 'employee4@gmail.com', password: '123456' },
+    { name: "employee5", role: "employee", email: 'employee5@gmail.com', password: '123456' },
 ])
 
 employee_contact_informaton = EmployeeContactInformation.create([
@@ -58,13 +58,13 @@ subscription_types = SubscriptionType.create([
 ])
 
 subscription_records = SubscriptionRecord.create([
-    {client: clients[0], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-    {client: clients[1], employee: employees[1], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
+    {client: clients[0], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 30000},
+    {client: clients[1], employee: employees[1], subscription_type: subscription_types[0], is_fully_paid: false, pay: 40000},
     {client: clients[2], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
     {client: clients[3], employee: employees[3], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
     {client: clients[4], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
     {client: clients[5], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-    {client: clients[6], employee: employees[1], subscription_type: subscription_types[2], is_fully_paid: false, pay: 0},
+    {client: clients[6], employee: employees[1], subscription_type: subscription_types[2], is_fully_paid: true, pay: 70000},
     {client: clients[7], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
     {client: clients[8], employee: employees[3], subscription_type: subscription_types[2], is_fully_paid: false, pay: 0},
     {client: clients[9], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
@@ -77,7 +77,7 @@ payment_records = PaymentRecord.create([
       amount: 30000,
     },
     {
-      subscription_record: subscription_records[0],
+      subscription_record: subscription_records[1],
       employee: employees[4],
       amount: 40000,
     },
