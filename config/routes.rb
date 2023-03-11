@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   get 'employee_contact_information/new'=> 'employee_contact_information#new', as: 'new_employee_contact_information'
   get 'employee_contact_information/create'=> 'employee_contact_information#create', as: 'create_employee_contact_information'
-  devise_for :employees
+  # devise_for :employees
+  devise_for :employees, controllers: {
+  sessions: 'employees/sessions'
+}
   root "employee#index"
   #payment record related routes
   get 'payment_records/index'
