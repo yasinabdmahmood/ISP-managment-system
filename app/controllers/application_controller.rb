@@ -12,8 +12,8 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:name, :email, :password, :current_password) }
   end
 
-  def after_sign_out_path_for(_resource_or_scope)
-    request.referrer
-    '/users/sign_in'
-  end
+  # def after_sign_out_path_for(_resource_or_scope)
+  #   request.referrer
+  #   '/users/sign_in'
+  # end
 end
