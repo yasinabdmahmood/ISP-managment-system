@@ -3,6 +3,10 @@
 class Employees::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
+  skip_before_action :verify_authenticity_token
+  # before_action :require_admin, only: [:create]
+
+  
 
   # GET /resource/sign_up
   # def new
@@ -10,9 +14,14 @@ class Employees::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    new_employee = Employee.new(new_employee_params)
+    if new_employee.save
+      render json: new_employee
+    else
+      render status: :unprocessable_entity, json: { error: "Unable to save new employee", messages: new_employee.errors.full_messages }
+    end
+  end
 
   # GET /resource/edit
   # def edit
@@ -59,4 +68,16 @@ class Employees::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+  private
+
+  def new_employee_params
+    params.require(:new_employee).permit(:name, :email, :password)
+  end
+
+  def require_admin
+    unless current_employee && current_employee.admin == 'admin'
+      flash[:alert] = "You are not authorized to perform this action."
+      redirect_to root_path
+    end
+  end
 end
