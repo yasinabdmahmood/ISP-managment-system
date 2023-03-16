@@ -1,6 +1,7 @@
 class ClientsController < ApplicationController
   def index
     @clients = Client.all.includes(:client_contact_informations)
+    render json: @clients, include: { client_contact_informations: { only: [:contact_info] } }
   end
   
   def new
