@@ -1,6 +1,7 @@
 class SubscriptionTypesController < ApplicationController
   def index
     @subscription_types = SubscriptionType.all
+    render json: @subscription_types
   end
 
   def new
