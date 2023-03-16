@@ -1,7 +1,13 @@
 class SubscriptionRecordsController < ApplicationController
   def index
     @subscription_records = SubscriptionRecord.all.includes(:client, :subscription_type, :employee)
+    render json: @subscription_records, include: { 
+      client: { only: [:name] }, 
+      employee: { only: [:name] }, 
+      subscription_type: { only: [:category, :cost] } 
+    }
   end
+  
 
   def new
     @new_subscription_record = SubscriptionRecord.new
