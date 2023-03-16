@@ -1,7 +1,16 @@
 class PaymentRecordsController < ApplicationController
   def index
-    @payment_records = PaymentRecord.all
+    @payment_records = PaymentRecord.all.includes(:subscription_record => [:client], :employee => [])
+    render json: @payment_records, include: { 
+      employee: { only: [:name] }, 
+      subscription_record: {
+        include: {
+          client: { },
+        }
+      }
+    }
   end
+  
 
   def new
     @new_payment_record = PaymentRecord.new
