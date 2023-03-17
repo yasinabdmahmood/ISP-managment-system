@@ -38,10 +38,10 @@ class SubscriptionTypesController < ApplicationController
 
     if @subscription_type.update(subscription_type_params)
       # Successful update, do something (e.g., redirect to the record's page)
-      redirect_to subscription_types_path
+      render json: { message: "success", subscription_type: @subscription_type }
     else
       # Failed update, render the edit form again with error messages
-      redirect_to edit_subscription_type_path(@subscription_type)
+      render json: { message: "error" }
     end
   end
 
