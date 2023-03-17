@@ -14,7 +14,7 @@ class SubscriptionTypesController < ApplicationController
     @subscription_type = SubscriptionType.find(params[:id])
     @subscription_type.destroy
 
-    redirect_to subscription_types_path, notice: "User was successfully deleted."
+    render json: {subscription_type_id: params[:id]}
   end
 
   
