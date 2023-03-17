@@ -1,4 +1,6 @@
 class SubscriptionTypesController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def index
     @subscription_types = SubscriptionType.all
     render json: @subscription_types
@@ -17,11 +19,13 @@ class SubscriptionTypesController < ApplicationController
 
   
   def create
-    @new_subscription_type = SubscriptionType.new(subscription_type_params)
-    if @new_subscription_type.save
-      redirect_to subscription_types_path
-    else
-      redirect_to :new
+    def create
+      @new_subscription_type = SubscriptionType.new(subscription_type_params)
+      if @new_subscription_type.save
+        render json: { message: "success" }
+      else
+        render json: { message: "error" }
+      end
     end
   end
 
