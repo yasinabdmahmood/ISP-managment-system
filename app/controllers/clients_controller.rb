@@ -46,7 +46,7 @@ class ClientsController < ApplicationController
     username = params[:updated_client][:username]
   
     # Access nested attribute values using the association name
-    contact_info = params[:updated_client][:client_contact_informations_attributes][:'0'][:contact_info]
+    contact_info = params[:updated_client][:contact_info]
     @client = Client.find(params[:id])
     p name
     p username
@@ -55,10 +55,10 @@ class ClientsController < ApplicationController
     if @client.update(name: name, username: username)
        @client.client_contact_informations.first.update(contact_info: contact_info)
       # Successful update, do something (e.g., redirect to the record's page)
-      redirect_to clients_path
+      render json: {message: 'success', client: @client, contact_info: contact_info}
     else
       # Failed update, render the edit form again with error messages
-      redirect_to edit_client_path(@subscription_type)
+      render json: {message: 'error'}
     end
   end
 
@@ -69,7 +69,7 @@ class ClientsController < ApplicationController
   end
 
   def updated_client_params
-    params.require(:updated_client).permit(:name, :username, client_contact_information: [:id, :contact_info])
+    params.require(:updated_client).permit(:name, :username, :contact_info)
   end
 
   # def updated_client_params
