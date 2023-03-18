@@ -26,7 +26,7 @@ class ClientsController < ApplicationController
     @client = Client.find(params[:id])
     @client.destroy
 
-    redirect_to clients_path, notice: "Client was successfully deleted."
+    render json: {client_id: params[:id]}
   end
 
   def edit
