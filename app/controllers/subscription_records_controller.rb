@@ -1,4 +1,5 @@
 class SubscriptionRecordsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   def index
     @subscription_records = SubscriptionRecord.all.includes(:client, :subscription_type, :employee)
     render json: @subscription_records, include: { 
@@ -20,9 +21,12 @@ class SubscriptionRecordsController < ApplicationController
     if @new_subscription_record.save
      @new_payment_record = PaymentRecord.new(employee: current_employee, subscription_record: @new_subscription_record,amount: @new_subscription_record.pay)
      if @new_payment_record.save
-      redirect_to subscription_records_path
+      @client = @new_subscription_record.client
+      @employee = @new_subscription_record.employee
+      @subscription_type = @new_subscription_record.subscription_type
+      render json: { message: 'success', subscriptionRecord: @new_subscription_record, client: @client, employee: @employee, subscriptionType: @subscription_type }
      else
-       flash[:alert] = @new_payment_record.errors.full_messages.join(", ")
+      render json: { message: 'error' }
      end
      
     else
