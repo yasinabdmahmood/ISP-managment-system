@@ -37,7 +37,9 @@ class SubscriptionRecordsController < ApplicationController
   def destroy
     @subscription_record = SubscriptionRecord.find(params[:id])
     if @subscription_record.destroy
-      redirect_to subscription_records_path
+      render json: {message: 'success', id: params[:id]}
+    else
+      rendef json: { mesage: 'error'}
     end
   end
 
