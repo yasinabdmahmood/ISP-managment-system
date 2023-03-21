@@ -1,4 +1,5 @@
 class PaymentRecordsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   def index
     @payment_records = PaymentRecord.all.includes(:subscription_record => [:client], :employee => [])
     render json: @payment_records, include: { 
@@ -25,10 +26,9 @@ class PaymentRecordsController < ApplicationController
     if @new_payment_record.amount + current_subscription_record_pay <= subscription_fee 
       @new_payment_record.save
       @new_payment_record.subscription_record.update(pay: @new_payment_record.subscription_record.pay += @new_payment_record.amount)
-      redirect_to subscription_records_path
+      render json: {message: 'sucsess'}
     else
-      flash[:alert] = @new_payment_record.errors.full_messages.join(", ")
-      redirect_to create_payment_record_path(payment_record_params[:subscription_record_id])
+      render json: {message: 'error'}
     end
   end
 
