@@ -1,7 +1,7 @@
 class SubscriptionRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
   def index
-    @subscription_records = SubscriptionRecord.all.includes(:client, :subscription_type, :employee)
+    @subscription_records = SubscriptionRecord.order(created_at: :desc).includes(:client, :subscription_type, :employee)
     render json: @subscription_records, include: { 
       client: { only: [:name] }, 
       employee: { only: [:name] }, 

@@ -1,7 +1,7 @@
 class ClientsController < ApplicationController
   skip_before_action :verify_authenticity_token
   def index
-    @clients = Client.all.includes(:client_contact_informations)
+    @clients = Client.order(created_at: :desc).includes(:client_contact_informations)
     render json: @clients, include: { client_contact_informations: { only: [:contact_info] } }
   end
   

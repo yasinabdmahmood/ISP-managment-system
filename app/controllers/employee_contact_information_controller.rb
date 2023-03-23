@@ -1,4 +1,5 @@
 class EmployeeContactInformationController < ApplicationController
+  skip_before_action :verify_authenticity_token
   def new
     @new_employee_contact_information = EmployeeContactInformation.new
   end
@@ -12,9 +13,19 @@ class EmployeeContactInformationController < ApplicationController
     end
   end
 
+  def destroy
+    contact_info = EmployeeContactInformation.find(params[:id])
+    if contact_info.destroy
+      render json: {message: 'success'}
+    else
+      render json: {message: 'error'}
+    end
+  end
+
   private
 
   def employee_contact_information_params
     params.require(:new_employee_contact_information).permit(:contact_info, :employee_id)
   end
+
 end

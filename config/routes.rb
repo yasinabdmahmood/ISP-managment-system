@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'employee_contact_information/new'=> 'employee_contact_information#new', as: 'new_employee_contact_information'
-  get 'employee_contact_information/create'=> 'employee_contact_information#create', as: 'create_employee_contact_information'
+  get 'employee_contact_information/destroy/:id'=> 'employee_contact_information#destroy', as: 'destroy_employee_contact_information'
+  post 'employee_contact_information/create'=> 'employee_contact_information#create', as: 'create_employee_contact_information'
   # devise_for :employees
   devise_for :employees, controllers: {
   sessions: 'employees/sessions',
