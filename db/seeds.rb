@@ -57,33 +57,41 @@ subscription_types = SubscriptionType.create([
     {category: 'Business',cost: 70000, profit: 10000},
 ])
 
-subscription_records = SubscriptionRecord.create([
-    {client: clients[0], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 30000},
-    {client: clients[1], employee: employees[1], subscription_type: subscription_types[0], is_fully_paid: false, pay: 40000},
-    {client: clients[2], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-    {client: clients[3], employee: employees[3], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-    {client: clients[4], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
-    {client: clients[5], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-    {client: clients[6], employee: employees[1], subscription_type: subscription_types[2], is_fully_paid: true, pay: 70000},
-    {client: clients[7], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-    {client: clients[8], employee: employees[3], subscription_type: subscription_types[2], is_fully_paid: false, pay: 0},
-    {client: clients[9], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
-])
+# subscription_records = SubscriptionRecord.create([
+#     {client: clients[0], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 30000},
+#     {client: clients[1], employee: employees[1], subscription_type: subscription_types[0], is_fully_paid: false, pay: 40000},
+#     {client: clients[2], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
+#     {client: clients[3], employee: employees[3], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
+#     {client: clients[4], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
+#     {client: clients[5], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
+#     {client: clients[6], employee: employees[1], subscription_type: subscription_types[2], is_fully_paid: true, pay: 70000},
+#     {client: clients[7], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
+#     {client: clients[8], employee: employees[3], subscription_type: subscription_types[2], is_fully_paid: false, pay: 0},
+#     {client: clients[9], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
+# ])
 
-payment_records = PaymentRecord.create([
-    {
-      subscription_record: subscription_records[0],
-      employee: employees[0],
-      amount: 30000,
-    },
-    {
-      subscription_record: subscription_records[1],
-      employee: employees[4],
-      amount: 40000,
-    },
-    {
-      subscription_record: subscription_records[6],
-      employee: employees[0],
-      amount: 70000,
-    },
-])
+start_time = 1.year.ago
+interval = 5.hours
+
+
+1000.times do |idx|
+    sampled_employee = Employee.all.sample
+    sampled_subscription_type =  SubscriptionType.all.sample
+    sampled_pay = (0..sampled_subscription_type.cost).step(1000).to_a.sample
+    random_time = start_time + idx*interval
+    sb = SubscriptionRecord.create(
+      employee: sampled_employee,
+      client: Client.all.sample,
+      subscription_type: sampled_subscription_type,
+      is_fully_paid: [true, false].sample,
+      pay: sampled_pay,
+      created_at: random_time,
+    )
+
+    PaymentRecord.create(
+      subscription_record: sb,
+      employee: sampled_employee,
+      amount: sampled_pay,
+      created_at: random_time,
+    )
+  end
