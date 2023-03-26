@@ -45,8 +45,27 @@ class PaymentRecordsController < ApplicationController
       }
     }
     else
-      render json: {message: 'error'}
+      render json: { error: 'payment can not be greater than the cost' }, status: :not_found
     end
+  end
+
+  def destroy
+    id = params[:id]
+    payment_record = PaymentRecord.find(id)
+    amount = payment_record.amount
+    subscription_record = payment_record.subscription_record
+    old_pay = subscription_record.pay
+    subscription_record.update(pay: old_pay - amount )
+
+    parsed_subscription_record = subscription_record.as_json(include: { 
+      client: { only: [:name] }, 
+      employee: { only: [:name] }, 
+      subscription_type: { only: [:category, :cost] } 
+    })
+    payment_record.destroy
+
+    render json: {mesage: 'success', updated_subscription_record: parsed_subscription_record, payment_id: id}
+
   end
 
   private
