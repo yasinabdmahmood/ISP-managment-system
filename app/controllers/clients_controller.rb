@@ -62,7 +62,7 @@ class ClientsController < ApplicationController
   def history
     id =params[:id]
     client = Client.find(id)
-    subscription_records = client.subscription_records.as_json(include: { 
+    subscription_records = client.subscription_records.order(created_at: :desc).as_json(include: { 
       client: { only: [:name] }, 
       employee: { only: [:name] }, 
       subscription_type: { only: [:category, :cost] } 
