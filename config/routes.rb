@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   # subscription record related routes
   get 'subscription_records'=> 'subscription_records#index', as: 'subscription_records'
+  get 'subscription_record/history'=> 'subscription_records#history', as: 'subscription_record_history'
   get 'subscription_record/new'=> 'subscription_records#new', as: 'new_subscription_record'
   post 'subscription_record/create'=> 'subscription_records#create', as: 'create_subscription_record'
   get '/subscription_record/delete/:id' => 'subscription_records#destroy', as: 'destroy_subscription_record'

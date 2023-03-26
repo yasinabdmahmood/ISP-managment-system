@@ -83,6 +83,22 @@ class SubscriptionRecordsController < ApplicationController
   def update
   end
 
+  def history
+    id =params[:id]
+    subscription_record = SubscriptionRecord.find(id)
+    payment_records = subscription_record.payment_records.order(created_at: :desc).as_json(include: { 
+      employee: { only: [:name] }, 
+      subscription_record: {
+        include: {
+          client: { },
+        }
+      }
+    })
+
+    render json: payment_records
+
+  end
+
 
   private
 
