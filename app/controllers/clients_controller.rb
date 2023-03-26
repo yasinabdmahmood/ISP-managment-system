@@ -48,9 +48,6 @@ class ClientsController < ApplicationController
     # Access nested attribute values using the association name
     contact_info = params[:updated_client][:contact_info]
     @client = Client.find(params[:id])
-    p name
-    p username
-    p contact_info
 
     if @client.update(name: name, username: username)
        @client.client_contact_informations.first.update(contact_info: contact_info)
@@ -60,6 +57,19 @@ class ClientsController < ApplicationController
       # Failed update, render the edit form again with error messages
       render json: {message: 'error'}
     end
+  end
+
+  def history
+    id =params[:id]
+    client = Client.find(id)
+    subscription_records = client.subscription_records.as_json(include: { 
+      client: { only: [:name] }, 
+      employee: { only: [:name] }, 
+      subscription_type: { only: [:category, :cost] } 
+    })
+
+    render json: subscription_records
+
   end
 
   private
