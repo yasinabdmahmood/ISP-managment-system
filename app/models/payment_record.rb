@@ -12,12 +12,7 @@ class PaymentRecord < ApplicationRecord
     private
 
     def check_for_overpay
-        p '00000000000000000000'
         subscription_fee = self.subscription_record.subscription_type.cost
-        p "subscription_fee is #{subscription_fee}"
-        p "current pay is #{self.subscription_record.pay}"
-        p "amount is #{self.amount}"
-        p self.subscription_record.pay > subscription_fee
         if self.subscription_record.pay > subscription_fee
             errors.add(:amount, "cannot be greater than subscription fee")
         end
