@@ -29,20 +29,40 @@ class SubscriptionRecordsController < ApplicationController
   def create
     @new_subscription_record = SubscriptionRecord.new(subscription_record_params)
     if @new_subscription_record.save
-     @new_payment_record = PaymentRecord.new(employee: current_employee, subscription_record: @new_subscription_record,amount: @new_subscription_record.pay)
-     if @new_payment_record.save
-      @client = @new_subscription_record.client
-      @employee = @new_subscription_record.employee
-      @subscription_type = @new_subscription_record.subscription_type
-      render json: { message: 'success', subscriptionRecord: @new_subscription_record, client: @client, employee: @employee, subscriptionType: @subscription_type }
-     else
-      render json: { message: 'error' }
-     end
-     
+      @new_payment_record = PaymentRecord.new(employee: current_employee, subscription_record: @new_subscription_record,amount: @new_subscription_record.pay)
+      if @new_payment_record.save
+        @client = @new_subscription_record.client
+        @employee = @new_subscription_record.employee
+        @subscription_type = @new_subscription_record.subscription_type
+        
+        subscription_record = @new_subscription_record.as_json(include: { 
+          client: { only: [:name] }, 
+          employee: { only: [:name] }, 
+          subscription_type: { only: [:category, :cost] } 
+        })
+        
+        payment_record = @new_payment_record.as_json(include: { 
+          employee: { only: [:name] }, 
+          subscription_record: {
+            include: {
+              client: { },
+            }
+          }
+        })
+        
+        render json: {
+          message: 'success',
+          subscriptionRecord: subscription_record,
+          paymentRecord: payment_record
+        }
+      else
+        render json: { message: 'error' }
+      end
     else
       redirect_to new_subscription_record_path
     end
   end
+  
 
   def destroy
     @subscription_record = SubscriptionRecord.find(params[:id])
