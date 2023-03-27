@@ -12,6 +12,13 @@ module ISPManagmentSystem
     config.load_defaults 7.0
     config.time_zone = 'Baghdad'
     config.active_record.default_timezone = :local
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options]
+      end
+    end
+    
 
     # Configuration for the application, engines, and railties goes here.
     #
