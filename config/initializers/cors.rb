@@ -6,7 +6,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   end
 
   allow do
-    origins 'https://isp-system.onrender.com'
+    origins 'https://6420f754960c8a37a162551d--aesthetic-centaur-fad1cd.netlify.app'
     resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options], credentials: true,
       expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'] # Add any additional cookies you want to share here
   end
