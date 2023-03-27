@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   def origin
     request.headers["Origin"] || "*"
   end
-end
+
 
   protected
 
