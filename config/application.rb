@@ -14,7 +14,7 @@ module ISPManagmentSystem
     config.active_record.default_timezone = :local
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'https://isp-react.netlify.app'
+        origins '*'
         resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options], credentials: true,
           expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'] # Add any additional headers you want to expose here
       end
