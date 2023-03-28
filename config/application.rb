@@ -12,8 +12,8 @@ module ISPManagmentSystem
     config.load_defaults 7.0
     config.time_zone = 'Baghdad'
     config.active_record.default_timezone = :local
-    config.middleware.use ActionDispatch::Session::CookieStore,
-    key: '_isp_managment_system_session', path: '/', same_site: :None, secure: true 
+     config.middleware.use ActionDispatch::Session::CookieStore,
+             key: '_isp_managment_system_session', path: '/', same_site: :None, secure: true 
     # config.middleware.insert_before 0, Rack::Cors do
     #   allow do
     #     origins 'https://isp-react.netlify.app', 'https://642201687183b1000808f0d5--isp-react.netlify.app', 'https://isp-system-react.onrender.com'
