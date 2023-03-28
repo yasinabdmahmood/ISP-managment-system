@@ -1,6 +1,6 @@
 # config/application.rb
 
-config.middleware.insert_before 0, Rack::Cors do
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins '*'
     resource '*', 
@@ -10,6 +10,7 @@ config.middleware.insert_before 0, Rack::Cors do
       expose: ['Set-Cookie'],
       max_age: 600,
       # Set SameSite=None and Secure for all cookies
+      :credentials => true, 
       :same_site => :none,
       :secure => true
   end
