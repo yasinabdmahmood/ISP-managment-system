@@ -19,14 +19,12 @@ class SubscriptionTypesController < ApplicationController
 
   
   def create
-    def create
       @new_subscription_type = SubscriptionType.new(subscription_type_params)
       if @new_subscription_type.save
-        render json: { message: "success", subscription_type: @new_subscription_type }
+        render json: { message: "success", subscription_type: @new_subscription_type }, status: 200
       else
-        render json: { message: "error" }
+        render json: { message: "error" }, status: 400
       end
-    end
   end
 
   def edit
