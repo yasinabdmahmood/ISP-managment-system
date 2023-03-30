@@ -52,10 +52,11 @@ class ClientsController < ApplicationController
     if @client.update(name: name, username: username)
        @client.client_contact_informations.first.update(contact_info: contact_info)
       # Successful update, do something (e.g., redirect to the record's page)
-      render json: {message: 'success', client: @client, contact_info: contact_info}
+      client = @client.as_json(include: { client_contact_informations: { only: [:id, :contact_info] } })
+      render json: {message: 'success', client: client }, status: 200
     else
       # Failed update, render the edit form again with error messages
-      render json: {message: 'error'}
+      render json: {message: 'error'}, status: 400
     end
   end
 
