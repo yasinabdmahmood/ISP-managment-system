@@ -25,9 +25,11 @@ class ClientsController < ApplicationController
 
   def destroy
     @client = Client.find(params[:id])
-    @client.destroy
-
-    render json: {client_id: params[:id]}
+    if @client.destroy
+      render json: {client_id: params[:id]}, status: 200
+    else
+      render json: {message: 'error'}, status: 400
+    end  
   end
 
   def edit
