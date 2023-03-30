@@ -12,9 +12,11 @@ class SubscriptionTypesController < ApplicationController
 
   def destroy
     @subscription_type = SubscriptionType.find(params[:id])
-    @subscription_type.destroy
-
-    render json: {subscription_type_id: params[:id]}
+    if @subscription_type.destroy
+      render json: {subscription_type_id: params[:id]}, status: 200
+    else
+      render json: {message: 'error'}, status: 400
+    end  
   end
 
   
