@@ -36,10 +36,10 @@ class SubscriptionTypesController < ApplicationController
 
     if @subscription_type.update(subscription_type_params)
       # Successful update, do something (e.g., redirect to the record's page)
-      render json: { message: "success", subscription_type: @subscription_type }
+      render json: { message: "success", subscription_type: @subscription_type }, status: 200
     else
       # Failed update, render the edit form again with error messages
-      render json: { message: "error" }
+      render json: { message: "error" }, status: 400
     end
   end
 
