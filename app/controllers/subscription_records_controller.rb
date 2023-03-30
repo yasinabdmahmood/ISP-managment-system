@@ -54,7 +54,7 @@ class SubscriptionRecordsController < ApplicationController
           message: 'success',
           subscriptionRecord: subscription_record,
           paymentRecord: payment_record
-        }
+        }, status: 200
       else
         render json: { message: @new_payment_record.errors.full_messages }, status: 400
       end
