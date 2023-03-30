@@ -56,10 +56,10 @@ class SubscriptionRecordsController < ApplicationController
           paymentRecord: payment_record
         }
       else
-        render json: { message: 'error' }
+        render json: { message: @new_payment_record.errors.full_messages }, status: 400
       end
     else
-      redirect_to new_subscription_record_path
+      render json: { message: 'error' }, status: 400
     end
   end
   
