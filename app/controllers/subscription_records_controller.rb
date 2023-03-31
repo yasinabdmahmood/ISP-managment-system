@@ -67,9 +67,9 @@ class SubscriptionRecordsController < ApplicationController
   def destroy
     @subscription_record = SubscriptionRecord.find(params[:id])
     if @subscription_record.destroy
-      render json: {message: 'success', id: params[:id]}
+      render json: {message: 'success', id: params[:id]}, status: 200
     else
-      rendef json: { mesage: 'error'}
+      rendef json: { mesage: 'error'}, status: 400
     end
   end
 
