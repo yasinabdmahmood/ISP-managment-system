@@ -43,9 +43,9 @@ class PaymentRecordsController < ApplicationController
           client: { },
         }
       }
-    }
+    }, status: 200
     else
-      render json: { error: 'payment can not be greater than the cost' }, status: :not_found
+      render json: { error: 'payment can not be greater than the cost' }, status: 400
     end
   end
 
@@ -62,9 +62,13 @@ class PaymentRecordsController < ApplicationController
       employee: { only: [:name] }, 
       subscription_type: { only: [:category, :cost] } 
     })
-    payment_record.destroy
+    if payment_record.destroy
+      render json: {mesage: 'success', updated_subscription_record: parsed_subscription_record, payment_id: id}, status: 200
+    else
+      render json: {message: 'error'}, status: 400
+    end
 
-    render json: {mesage: 'success', updated_subscription_record: parsed_subscription_record, payment_id: id}
+    
 
   end
 
