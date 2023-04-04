@@ -1,6 +1,10 @@
 class PaymentRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
   def index
+    if PaymentRecord.count == 0
+      render json: []
+      return
+    end
     fetched_items_at_once = 20
     n = params[:offset].to_i 
     
@@ -10,6 +14,7 @@ class PaymentRecordsController < ApplicationController
 
     if offset > total_records-fetched_items_at_once
       render json: []
+      return
     end
     @payment_records = PaymentRecord.order(created_at: :desc).includes(:subscription_record => [:client], :employee => []).offset(offset).limit(fetched_items_at_once)
     render json: @payment_records, include: { 
