@@ -12,10 +12,10 @@ class SubscriptionRecordsController < ApplicationController
     
     offset = fetched_items_at_once*n
 
-    if offset > total_records-fetched_items_at_once
-      render json: []
-      return
-    end
+    # if offset > total_records-fetched_items_at_once
+    #   render json: []
+    #   return
+    # end
     @subscription_records = SubscriptionRecord.order(created_at: :desc).includes(:client, :subscription_type, :employee).offset(offset).limit(fetched_items_at_once)
     render json: @subscription_records, include: { 
       client: { only: [:name] }, 
