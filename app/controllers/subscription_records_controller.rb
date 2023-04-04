@@ -1,6 +1,10 @@
 class SubscriptionRecordsController < ApplicationController
   skip_before_action :verify_authenticity_token
   def index
+    if SubscriptionRecord.count == 0
+      render json: []
+      return
+    end
     fetched_items_at_once = 20
     n = params[:offset].to_i 
     
@@ -10,6 +14,7 @@ class SubscriptionRecordsController < ApplicationController
 
     if offset > total_records-fetched_items_at_once
       render json: []
+      return
     end
     @subscription_records = SubscriptionRecord.order(created_at: :desc).includes(:client, :subscription_type, :employee).offset(offset).limit(fetched_items_at_once)
     render json: @subscription_records, include: { 
