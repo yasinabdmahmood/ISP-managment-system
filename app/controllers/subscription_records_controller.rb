@@ -108,6 +108,6 @@ class SubscriptionRecordsController < ApplicationController
   private
 
   def subscription_record_params
-    params.require(:new_subscription_record).permit(:pay, :client_id, :subscription_type_id, :employee_id)
+    params.require(:new_subscription_record).permit(:pay, :client_id, :subscription_type_id, :employee_id, :created_at)
   end
 end
