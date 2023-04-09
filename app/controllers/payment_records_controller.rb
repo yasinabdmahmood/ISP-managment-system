@@ -80,7 +80,7 @@ class PaymentRecordsController < ApplicationController
   private
 
   def payment_record_params
-    params.require(:new_payment_record).permit(:amount, :subscription_record_id)
+    params.require(:new_payment_record).permit(:amount, :subscription_record_id, :created_at)
   end
 
 end
