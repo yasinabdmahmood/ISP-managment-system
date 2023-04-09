@@ -48,11 +48,11 @@ class ClientsController < ApplicationController
     username = params[:updated_client][:username]
   
     # Access nested attribute values using the association name
-    contact_info = params[:updated_client][:contact_info]
+    # contact_info = params[:updated_client][:contact_info]
     @client = Client.find(params[:id])
 
     if @client.update(name: name, username: username)
-       @client.client_contact_informations.first.update(contact_info: contact_info)
+      #  @client.client_contact_informations.first.update(contact_info: contact_info)
       # Successful update, do something (e.g., redirect to the record's page)
       client = @client.as_json(include: { client_contact_informations: { only: [:id, :contact_info] } })
       render json: {message: 'success', client: client }, status: 200
