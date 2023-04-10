@@ -13,7 +13,8 @@ class ClientsController < ApplicationController
     name = params[:new_client][:name]
     username = params[:new_client][:username]
     contact_info = params[:new_client][:contact_info]
-    @new_client = Client.new(name: name, username: username)
+    coordinate = params[:new_client][:coordinate]
+    @new_client = Client.new(name: name, username: username, coordinate: coordinate)
     if @new_client.save 
       @contact_info = ClientContactInformation.create(client: @new_client, contact_info: contact_info)
       # render json: @new_client.as_json(include: { client_contact_informations: { only: [:contact_info] } })
@@ -46,12 +47,13 @@ class ClientsController < ApplicationController
     # end
     name = params[:updated_client][:name]
     username = params[:updated_client][:username]
+    coordinate = params[:updated_client][:coordinate]
   
     # Access nested attribute values using the association name
     # contact_info = params[:updated_client][:contact_info]
     @client = Client.find(params[:id])
 
-    if @client.update(name: name, username: username)
+    if @client.update(name: name, username: username, coordinate: coordinate)
       #  @client.client_contact_informations.first.update(contact_info: contact_info)
       # Successful update, do something (e.g., redirect to the record's page)
       client = @client.as_json(include: { client_contact_informations: { only: [:id, :contact_info] } })
@@ -78,11 +80,11 @@ class ClientsController < ApplicationController
   private
 
   def client_params
-    params.require(:new_client).permit(:name, :username, :contact_info)
+    params.require(:new_client).permit(:name, :username, :contact_info, :coordinate)
   end
 
   def updated_client_params
-    params.require(:updated_client).permit(:name, :username, :contact_info)
+    params.require(:updated_client).permit(:name, :username, :contact_info, :coordinate)
   end
 
   # def updated_client_params
