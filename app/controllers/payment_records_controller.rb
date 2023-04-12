@@ -12,10 +12,6 @@ class PaymentRecordsController < ApplicationController
     
     offset = fetched_items_at_once*n
 
-    # if offset > total_records-fetched_items_at_once
-    #   render json: []
-    #   return
-    # end
     @payment_records = PaymentRecord.order(created_at: :desc).includes(:subscription_record => [:client], :employee => []).offset(offset).limit(fetched_items_at_once)
     render json: @payment_records, include: { 
       employee: { only: [:name] }, 
@@ -25,6 +21,14 @@ class PaymentRecordsController < ApplicationController
         }
       }
     }
+    # render json: PaymentRecord.all, include: { 
+    #   employee: { only: [:name] }, 
+    #   subscription_record: {
+    #     include: {
+    #       client: { },
+    #     }
+    #   }
+    # }
   end
   
 
