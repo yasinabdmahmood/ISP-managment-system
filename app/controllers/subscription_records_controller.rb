@@ -11,17 +11,19 @@ class SubscriptionRecordsController < ApplicationController
     total_records = SubscriptionRecord.count
     
     offset = fetched_items_at_once*n
-
-    # if offset > total_records-fetched_items_at_once
-    #   render json: []
-    #   return
-    # end
     @subscription_records = SubscriptionRecord.order(created_at: :desc).includes(:client, :subscription_type, :employee).offset(offset).limit(fetched_items_at_once)
     render json: @subscription_records, include: { 
       client: { only: [:name] }, 
       employee: { only: [:name] }, 
       subscription_type: { only: [:category, :cost] } 
     }
+
+    # uncomment below if you want to fetch all the records
+    # render json: SubscriptionRecord.all, include: { 
+    #   client: { only: [:name] }, 
+    #   employee: { only: [:name] }, 
+    #   subscription_type: { only: [:category, :cost] } 
+    # }
   end
   
 
