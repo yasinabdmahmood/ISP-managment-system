@@ -5,11 +5,17 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
-
 employees = Employee.create([
     { name: "Yaseen", role: "admin", email: 'abd181103@gmail.com', password: '123456'},
-    { name: "Arman", role: "admin", email: 'arman@gmail.com', password: '123456' },   
+    { name: "Arman", role: "admin", email: 'arman@gmail.com', password: '123456' },  
 ])
+# employees = Employee.create([
+#     { name: "Yaseen", role: "admin", email: 'abd181103@gmail.com', password: '123456'},
+#     { name: "Arman", role: "admin", email: 'arman@gmail.com', password: '123456' }, 
+#     { name: "Rebaz", role: "employee", email: 'rebaz@gmail.com', password: '123456'},
+#     { name: "Hemen", role: "employee", email: 'hemen@gmail.com', password: '123456' }, 
+#     { name: "Ahmed", role: "employee", email: 'ahmed@gmail.com', password: '123456'},  
+# ])
 
 # employee_contact_informaton = EmployeeContactInformation.create([
 #     {employee: employees[0], contact_info: '07501257896'},
@@ -23,16 +29,16 @@ employees = Employee.create([
 # ])
 
 # clients = Client.create([
-#     {name: 'client_1', username: 'client1'},
-#     {name: 'client_2', username: 'client2'},
-#     {name: 'client_3', username: 'client3'},
-#     {name: 'client_4', username: 'client4'},
-#     {name: 'client_5', username: 'client5'},
-#     {name: 'client_6', username: 'client6'},
-#     {name: 'client_7', username: 'client7'},
-#     {name: 'client_8', username: 'client8'},
-#     {name: 'client_9', username: 'client9'},
-#     {name: 'client_10', username: 'client10'},
+#     {name: 'Azad', username: 'azad@11', coordinate: '11,11'},
+#     {name: 'Nawzad', username: 'nawzad@23', coordinate: '11,11'},
+#     {name: 'Serwan', username: 'serwan@12', coordinate: '11,11'},
+#     {name: 'Brwa', username: 'brwa@24', coordinate: '11,11'},
+#     {name: 'Kareem', username: 'kareem@65', coordinate: '11,11'},
+#     {name: 'Bazdar', username: 'bazdar@24', coordinate: '11,11'},
+#     {name: 'Delan', username: 'delan@19', coordinate: '11,11'},
+#     {name: 'Alan', username: 'alan@45', coordinate: '11,11'},
+#     {name: 'Omer', username: 'omer@78', coordinate: '11,11'},
+#     {name: 'Rozgar', username: 'rozgar@76', coordinate: '11,11'},
 # ])
 
 # client_contact_informations = ClientContactInformation.create([
@@ -52,19 +58,6 @@ employees = Employee.create([
 #     {category: 'Economic',cost: 38000, profit: 5000},
 #     {category: 'Standard',cost: 45000, profit: 8000},
 #     {category: 'Business',cost: 70000, profit: 10000},
-# ])
-
-# subscription_records = SubscriptionRecord.create([
-#     {client: clients[0], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 30000},
-#     {client: clients[1], employee: employees[1], subscription_type: subscription_types[0], is_fully_paid: false, pay: 40000},
-#     {client: clients[2], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-#     {client: clients[3], employee: employees[3], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-#     {client: clients[4], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
-#     {client: clients[5], employee: employees[0], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-#     {client: clients[6], employee: employees[1], subscription_type: subscription_types[2], is_fully_paid: true, pay: 70000},
-#     {client: clients[7], employee: employees[2], subscription_type: subscription_types[0], is_fully_paid: false, pay: 0},
-#     {client: clients[8], employee: employees[3], subscription_type: subscription_types[2], is_fully_paid: false, pay: 0},
-#     {client: clients[9], employee: employees[4], subscription_type: subscription_types[1], is_fully_paid: false, pay: 0},
 # ])
 
 # start_time = 1.year.ago
