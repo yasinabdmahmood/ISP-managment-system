@@ -25,6 +25,35 @@ class SubscriptionRecordsController < ApplicationController
     #   subscription_type: { only: [:category, :cost] } 
     # }
   end
+
+  def filter
+    start_date = params.dig(:date, :start)
+    end_date = params.dig(:date, :end)
+    filter = params.dig(:filter)
+  
+    subscription_records = SubscriptionRecord.order(created_at: :desc).includes(:client, :subscription_type, :employee)
+  
+    if start_date.present? && end_date.present?
+      start_date = Date.parse(start_date)
+      end_date = Date.parse(end_date)
+      subscription_records = subscription_records.where(created_at: start_date..end_date + 1.day)
+    end
+  
+    if filter.present?
+      if filter == 'unpaid'
+        subscription_records = subscription_records.where("pay != cost")
+      end
+    end
+  
+    total_records = subscription_records.count
+  
+    render json: subscription_records, include: { 
+      client: { only: [:name] }, 
+      employee: { only: [:name] }, 
+      subscription_type: { only: [:category, :cost] } 
+    }
+  end
+  
   
 
   def new
@@ -35,6 +64,8 @@ class SubscriptionRecordsController < ApplicationController
 
   def create
     @new_subscription_record = SubscriptionRecord.new(subscription_record_params)
+    @new_subscription_record.cost = @new_subscription_record.subscription_type.cost
+    @new_subscription_record.category = @new_subscription_record.subscription_type.category
     if @new_subscription_record.save
       @new_payment_record = PaymentRecord.new(employee: current_employee, subscription_record: @new_subscription_record,amount: @new_subscription_record.pay)
       if @new_payment_record.save
