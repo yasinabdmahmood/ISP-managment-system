@@ -64,17 +64,21 @@ employees = Employee.create([
 # interval = 5.hours
 
 
-# 1000.times do |idx|
+# 1825.times do |idx|
 #     sampled_employee = Employee.all.sample
 #     sampled_subscription_type =  SubscriptionType.all.sample
 #     sampled_pay = (0..sampled_subscription_type.cost).step(1000).to_a.sample
 #     random_time = start_time + idx*interval
+#     cost = sampled_subscription_type.cost
+#     category = sampled_subscription_type.category
 #     sb = SubscriptionRecord.create(
 #       employee: sampled_employee,
 #       client: Client.all.sample,
 #       subscription_type: sampled_subscription_type,
 #       is_fully_paid: [true, false].sample,
 #       pay: sampled_pay,
+#       cost: cost,
+#       category: category,
 #       created_at: random_time,
 #     )
 
@@ -84,4 +88,4 @@ employees = Employee.create([
 #       amount: sampled_pay,
 #       created_at: random_time,
 #     )
-#   end
+# end
