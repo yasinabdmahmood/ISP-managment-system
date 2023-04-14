@@ -13,7 +13,7 @@ class SubscriptionRecordsController < ApplicationController
     offset = fetched_items_at_once*n
     @subscription_records = SubscriptionRecord.order(created_at: :desc).includes(:client, :subscription_type, :employee).offset(offset).limit(fetched_items_at_once)
     render json: @subscription_records, include: { 
-      client: { only: [:name] }, 
+      client: { only: [:name, :username] }, 
       employee: { only: [:name] }, 
       subscription_type: { only: [:category, :cost] } 
     }
@@ -48,7 +48,7 @@ class SubscriptionRecordsController < ApplicationController
     total_records = subscription_records.count
   
     render json: subscription_records, include: { 
-      client: { only: [:name] }, 
+      client: { only: [:name, :username] }, 
       employee: { only: [:name] }, 
       subscription_type: { only: [:category, :cost] } 
     }
@@ -74,7 +74,7 @@ class SubscriptionRecordsController < ApplicationController
         @subscription_type = @new_subscription_record.subscription_type
         
         subscription_record = @new_subscription_record.as_json(include: { 
-          client: { only: [:name] }, 
+          client: { only: [:name, :username] }, 
           employee: { only: [:name] }, 
           subscription_type: { only: [:category, :cost] } 
         })
