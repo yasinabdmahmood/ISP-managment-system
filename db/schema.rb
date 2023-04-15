@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_14_144400) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_15_121901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,6 +73,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_14_144400) do
     t.text "note"
     t.decimal "cost"
     t.string "category"
+    t.string "assigned_employee"
     t.index ["client_id"], name: "index_subscription_records_on_client_id"
     t.index ["employee_id"], name: "index_subscription_records_on_employee_id"
     t.index ["subscription_type_id"], name: "index_subscription_records_on_subscription_type_id"
