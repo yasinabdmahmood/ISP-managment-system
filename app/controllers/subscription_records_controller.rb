@@ -53,6 +53,18 @@ class SubscriptionRecordsController < ApplicationController
       subscription_type: { only: [:category, :cost] } 
     }
   end
+
+  def unpaid
+    subscription_records = SubscriptionRecord.order(created_at: :desc).where("pay != cost").includes(:client, :subscription_type, :employee)
+
+    render json: subscription_records, include: { 
+      client: { only: [:name, :username] }, 
+      employee: { only: [:name] }, 
+      subscription_type: { only: [:category, :cost] } 
+    }
+  end
+
+  
   
   
 
