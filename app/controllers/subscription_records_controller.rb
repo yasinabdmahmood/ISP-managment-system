@@ -131,6 +131,16 @@ class SubscriptionRecordsController < ApplicationController
   end
 
   def update
+    subscription_record = SubscriptionRecord.find(params[:id])
+    if subscription_record.update(updated_subscription_record_params)
+      render json: subscription_record, include: { 
+      client: { only: [:name, :username] }, 
+      employee: { only: [:name] }, 
+      subscription_type: { only: [:category, :cost] } 
+    }, status: 200
+    else
+      render json: {message: 'error'}, status: 400
+    end
   end
 
   def history
@@ -154,5 +164,9 @@ class SubscriptionRecordsController < ApplicationController
 
   def subscription_record_params
     params.require(:new_subscription_record).permit(:pay, :client_id, :subscription_type_id, :employee_id, :created_at, :note)
+  end
+
+  def updated_subscription_record_params
+    params.require(:updated_subscription_record).permit(:client_id, :created_at, :assigned_employee, :note)
   end
 end
