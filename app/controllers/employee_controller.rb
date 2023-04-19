@@ -7,6 +7,13 @@ class EmployeeController < ApplicationController
   # employee/update
   def update
     @employee = Employee.find(params[:id])
+
+    # if the current user is not admin then they can not elevate an employee to become admin
+    if current_employee.role != 'admin'
+      render json: {message: 'You are not authorized to perform this action'}, status: 401
+      return
+    end
+
     if @employee.update(employee_params)
       render json: { message: 'Success' }, status: 200
     else
@@ -17,7 +24,7 @@ class EmployeeController < ApplicationController
   private
 
   def employee_params
-    params.require(:employee).permit(:name, :email, :password, :password_confirmation)
+    params.require(:employee).permit(:name, :email, :password, :password_confirmation, :role)
   end
 
 end
