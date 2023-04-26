@@ -86,8 +86,4 @@ class ClientsController < ApplicationController
   def updated_client_params
     params.require(:updated_client).permit(:name, :username, :contact_info, :coordinate)
   end
-
-  # def updated_client_params
-  #   params.require(:updated_client).permit(:name, :username, :contact_info)
-  # end
 end
