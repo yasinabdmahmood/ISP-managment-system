@@ -18,7 +18,8 @@ class ClientsController < ApplicationController
     if @new_client.save 
       @contact_info = ClientContactInformation.create(client: @new_client, contact_info: contact_info)
       # render json: @new_client.as_json(include: { client_contact_informations: { only: [:contact_info] } })
-      render json: { client: @new_client, contact_info: contact_info}, status: 200
+      # render json: { client: @new_client, contact_info: @contact_info}, status: 200
+      render json: @new_client, include: { client_contact_informations: { only: [:id, :contact_info] } }, status: 200
     else
       render json: { message: "error" }, status: 400
     end
