@@ -160,6 +160,11 @@ class SubscriptionRecordsController < ApplicationController
   end
 
   def assign_employees
+    if current_employee.role != 'admin'
+      render json: { error: 'the curent user is allowed to perform this action' }, status: 400 
+      return
+    end
+    
     employee_name = assign_employees_params[:employee]
     subscription_ids = assign_employees_params[:subscriptionIds]
 
