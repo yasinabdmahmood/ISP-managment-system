@@ -159,6 +159,19 @@ class SubscriptionRecordsController < ApplicationController
 
   end
 
+  def assign_employees
+    employee_name = assign_employees_params[:employee]
+    subscription_ids = assign_employees_params[:subscriptionIds]
+
+    employee = Employee.find_by(name: employee_name)
+    if employee.present?
+      SubscriptionRecord.where(id: subscription_ids).update_all(assigned_employee: employee.name)
+      render json: { success: true }, status: 200
+    else
+      render json: { error: 'payment can not be greater than the cost' }, status: 400
+    end
+  end
+
 
   private
 
@@ -168,5 +181,9 @@ class SubscriptionRecordsController < ApplicationController
 
   def updated_subscription_record_params
     params.require(:updated_subscription_record).permit(:client_id, :created_at, :assigned_employee, :note)
+  end
+
+  def assign_employees_params
+    params.require(:assign_employees).permit(:employee, subscriptionIds: [])
   end
 end

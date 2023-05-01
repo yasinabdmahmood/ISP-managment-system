@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get '/subscription_record/delete/:id' => 'subscription_records#destroy', as: 'destroy_subscription_record'
   get '/subscription_record/edit/:id' => 'subscription_records#edit', as: 'edit_subscription_record'
   post '/subscription_record/update/:id' => 'subscription_records#update', as: 'update_subscription_record'
+  post '/subscription_record/assign_employees' => 'subscription_records#assign_employees', as: 'assign_employees'
 
   # subscription type related routes
   get '/subscription_types/delete/:id' => 'subscription_types#destroy', as: 'destroy_subscription_type'
