@@ -51,4 +51,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+
+  get 'download', to: 'backups#download'
+  get 'download_csv' => 'backups#download_csv', as: 'download_csv'
+  get 'download_subscription_records_as_csv' => 'backups#download_subscription_records_as_csv', as: 'download_subscription_records_as_csv'
 end
