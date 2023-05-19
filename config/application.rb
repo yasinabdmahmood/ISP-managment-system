@@ -12,6 +12,8 @@ module ISPManagmentSystem
     config.load_defaults 7.0
     config.time_zone = 'Baghdad'
     config.active_record.default_timezone = :local
+    config.encoding = 'utf-8'
+
     if ENV['RAILS_ENV'] == 'production' || ENV['RAILS_ENVIRONMENT'] == 'production'
       config.middleware.use ActionDispatch::Session::CookieStore,
       key: '_isp_managment_system_session', path: '/', same_site: :None, secure: true 
