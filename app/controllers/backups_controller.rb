@@ -49,4 +49,23 @@ class BackupsController < ApplicationController
     # Send the CSV file as a response
     send_data csv_data, filename: 'subscription_records.csv', type: 'text/csv; charset=UTF-8'
   end
+
+  def download_payment_records_as_csv
+    # Retrieve data from the database
+    data = PaymentRecord.includes(:employee, { :subscription_record =>  :client }).all
+
+    # Generate CSV data
+    csv_data = CSV.generate do |csv|
+      # Write headers
+      csv << ['Client', 'Employee', 'Amount']
+
+      # Write data rows
+      data.each do |row|
+        csv << [row.subscription_record.client.name, row.employee.name, row.amount]
+      end
+    end
+
+    # Send the CSV file as a response
+    send_data csv_data, filename: 'subscription_types.csv', type: 'text/csv'
+  end
 end
