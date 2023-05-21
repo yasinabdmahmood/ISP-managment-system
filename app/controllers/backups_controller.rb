@@ -68,4 +68,22 @@ class BackupsController < ApplicationController
     # Send the CSV file as a response
     send_data csv_data, filename: 'subscription_types.csv', type: 'text/csv'
   end
+
+  def download_clients_as_csv
+    # Retrieve data from the database
+    data = Client.all
+    # Generate CSV data
+    csv_data = CSV.generate do |csv|
+      # Write headers
+      csv << ['Name', 'Username', 'Coordinate']
+
+      # Write data rows
+      data.each do |row|
+        csv << [row.name, row.username, row.coordinate]
+      end
+    end
+
+    # Send the CSV file as a response
+    send_data csv_data, filename: 'subscription_types.csv', type: 'text/csv'
+  end
 end
