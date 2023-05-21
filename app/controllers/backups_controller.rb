@@ -1,7 +1,7 @@
 require 'csv'
+
 class BackupsController < ApplicationController
   skip_before_action :verify_authenticity_token
-
 
   def download_subscription_types_as_csv
     # Retrieve data from the database
@@ -71,17 +71,20 @@ class BackupsController < ApplicationController
 
   def download_clients_as_csv
     # Retrieve data from the database
-    data = Client.all
+    data = Client.includes(:client_contact_informations).all
+
     # Generate CSV data
     csv_data = CSV.generate do |csv|
       # Write headers
-      csv << ['Name', 'Username', 'Coordinate']
+      csv << ['Name', 'Username', 'Coordinate', 'Contact information']
 
       # Write data rows
       data.each do |row|
-        csv << [row.name, row.username, row.coordinate]
+        contact_info_array = row.client_contact_informations.map(&:contact_info)
+        csv << [row.name, row.username, row.coordinate, *contact_info_array]
       end
     end
+
 
     # Send the CSV file as a response
     send_data csv_data, filename: 'subscription_types.csv', type: 'text/csv'
