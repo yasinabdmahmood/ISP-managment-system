@@ -21,14 +21,7 @@ class PaymentRecordsController < ApplicationController
         }
       }
     }
-    # render json: PaymentRecord.all, include: { 
-    #   employee: { only: [:name] }, 
-    #   subscription_record: {
-    #     include: {
-    #       client: { },
-    #     }
-    #   }
-    # }
+    
   end
   
 
