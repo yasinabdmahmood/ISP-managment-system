@@ -1,4 +1,4 @@
-class BackupsController < ApplicationController
+class ActivityController  < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
