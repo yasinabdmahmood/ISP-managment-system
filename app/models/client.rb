@@ -1,6 +1,7 @@
 class Client < ApplicationRecord
 
     after_create :add_client_to_activity
+    after_destroy :add_deleted_client_to_activity
 
     has_many :client_contact_informations, dependent: :destroy
     accepts_nested_attributes_for :client_contact_informations
@@ -17,6 +18,15 @@ class Client < ApplicationRecord
         Activity.create(
             employee_name: self.name,
             action_type: 'create',
+            table_name: 'client',
+            json_data: self.to_json
+        )
+    end
+
+    def add_deleted_client_to_activity
+        Activity.create(
+            employee_name: self.name,
+            action_type: 'delete',
             table_name: 'client',
             json_data: self.to_json
         )
