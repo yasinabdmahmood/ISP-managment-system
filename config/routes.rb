@@ -59,5 +59,5 @@ Rails.application.routes.draw do
   get 'download_clients_as_csv' => 'backups#download_clients_as_csv', as: 'download_clients_as_csv'
 
   #Activity related routes
-  get 'activities/index' => 'activities#index', as: 'activirties'
+  get 'activities/index' => 'activity#index', as: 'activirties'
 end
