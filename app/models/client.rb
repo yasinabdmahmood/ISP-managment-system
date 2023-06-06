@@ -16,7 +16,7 @@ class Client < ApplicationRecord
 
     def add_client_to_activity
         Activity.create(
-            employee_name: self.name,
+            employee_name: Current.employee.name,
             action_type: 'create',
             table_name: 'client',
             json_data: self.to_json
@@ -25,7 +25,7 @@ class Client < ApplicationRecord
 
     def add_deleted_client_to_activity
         Activity.create(
-            employee_name: self.name,
+            employee_name: Current.employee.name,
             action_type: 'delete',
             table_name: 'client',
             json_data: self.to_json
