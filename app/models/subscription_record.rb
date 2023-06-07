@@ -34,7 +34,19 @@ class SubscriptionRecord < ApplicationRecord
 
 
     def save_new_record_to_activity
-        create_activity_record(action_type: 'create' ,table_name: 'Subscription Record' ,json_data: self)
+        json_data = {
+            user: self.client.name,
+            username: self.client.username,
+            employee: self.employee.name,
+            assigned_employee: self.assigned_employee,
+            category: self.category,
+            cost: self.cost,
+            pay: self.pay,
+            note: self.note,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+        }
+        create_activity_record(action_type: 'create' ,table_name: 'Subscription Record' ,json_data: json_data)
         # Activity.create(
         #     employee_name: Current.employee.name,
         #     action_type: 'create',
