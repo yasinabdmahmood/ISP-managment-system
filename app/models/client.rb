@@ -16,30 +16,42 @@ class Client < ApplicationRecord
     private
 
     def save_new_record_to_activity
-        Activity.create(
-            employee_name: Current.employee.name,
-            action_type: 'create',
-            table_name: 'client',
-            json_data: self.to_json
-        )
+        create_activity_record(action_type: 'create' ,table_name: 'client' ,json_data: self)
+        # Activity.create(
+        #     employee_name: Current.employee.name,
+        #     action_type: 'create',
+        #     table_name: 'client',
+        #     json_data: self.to_json
+        # )
     end
 
     def save_deleted_record_to_activity
-        Activity.create(
-            employee_name: Current.employee.name,
-            action_type: 'delete',
-            table_name: 'client',
-            json_data: self.to_json
-        )
+        create_activity_record(action_type: 'delete' ,table_name: 'client' ,json_data: self)
+        # Activity.create(
+        #     employee_name: Current.employee.name,
+        #     action_type: 'delete',
+        #     table_name: 'client',
+        #     json_data: self.to_json
+        # )
     end
 
     def save_record_changes_to_activity
         changes_made = self.saved_changes
+        create_activity_record(action_type: 'update' ,table_name: 'client' ,json_data: changes_made)
+        # Activity.create(
+        #     employee_name: Current.employee.name,
+        #     action_type: 'update',
+        #     table_name: 'client',
+        #     json_data: changes_made.to_json
+        # )
+    end
+
+    def create_activity_record( action_type: ,table_name: ,json_data: )
         Activity.create(
             employee_name: Current.employee.name,
-            action_type: 'update',
-            table_name: 'client',
-            json_data: changes_made.to_json
+            action_type: action_type,
+            table_name: table_name,
+            json_data: json_data.to_json
         )
     end
 
