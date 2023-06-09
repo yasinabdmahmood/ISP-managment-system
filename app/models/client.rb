@@ -38,12 +38,6 @@ class Client < ApplicationRecord
     def save_record_changes_to_activity
         changes_made = self.saved_changes
         create_activity_record(action_type: 'update' ,table_name: 'client' ,json_data: changes_made)
-        # Activity.create(
-        #     employee_name: Current.employee.name,
-        #     action_type: 'update',
-        #     table_name: 'client',
-        #     json_data: changes_made.to_json
-        # )
     end
 
     def create_activity_record( action_type: ,table_name: ,json_data: )
