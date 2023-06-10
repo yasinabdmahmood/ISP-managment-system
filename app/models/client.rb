@@ -16,7 +16,14 @@ class Client < ApplicationRecord
     private
 
     def save_new_record_to_activity
-        create_activity_record(action_type: 'create' ,table_name: 'client' ,json_data: self)
+        json_data = {
+            name: self.name,
+            username: self.username,
+            coordinate: self.coordinate,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+        }
+        create_activity_record(action_type: 'create' ,table_name: 'client' ,json_data: json_data)
         # Activity.create(
         #     employee_name: Current.employee.name,
         #     action_type: 'create',
@@ -26,7 +33,14 @@ class Client < ApplicationRecord
     end
 
     def save_deleted_record_to_activity
-        create_activity_record(action_type: 'delete' ,table_name: 'client' ,json_data: self)
+        json_data = {
+            name: self.name,
+            username: self.username,
+            coordinate: self.coordinate,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+        }
+        create_activity_record(action_type: 'delete' ,table_name: 'client' ,json_data: json_data)
         # Activity.create(
         #     employee_name: Current.employee.name,
         #     action_type: 'delete',
@@ -37,6 +51,16 @@ class Client < ApplicationRecord
 
     def save_record_changes_to_activity
         changes_made = self.saved_changes
+        json_data = {
+            json_data = {
+                name: self.name,
+                username: self.username,
+                coordinate: self.coordinate,
+                created_at: self.created_at,
+                updated_at: self.updated_at,
+            }
+        }
+        merged_hash = json_data.merge(changes_made)
         create_activity_record(action_type: 'update' ,table_name: 'client' ,json_data: changes_made)
     end
 
