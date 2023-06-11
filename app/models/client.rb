@@ -52,16 +52,14 @@ class Client < ApplicationRecord
     def save_record_changes_to_activity
         changes_made = self.saved_changes
         json_data = {
-            json_data = {
                 name: self.name,
                 username: self.username,
                 coordinate: self.coordinate,
                 created_at: self.created_at,
                 updated_at: self.updated_at,
-            }
         }
         merged_hash = json_data.merge(changes_made)
-        create_activity_record(action_type: 'update' ,table_name: 'client' ,json_data: changes_made)
+        create_activity_record(action_type: 'update' ,table_name: 'client' ,json_data: merged_hash)
     end
 
     def create_activity_record( action_type: ,table_name: ,json_data: )
