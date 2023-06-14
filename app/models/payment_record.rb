@@ -1,6 +1,9 @@
 class PaymentRecord < ApplicationRecord
     # after_create :update_associated_subscription_record
 
+    after_create :save_new_record_to_activity
+    after_destroy :save_deleted_record_to_activity
+
     validate :check_for_overpay
     
 
@@ -27,6 +30,44 @@ class PaymentRecord < ApplicationRecord
     #     end
     #     sr.update(pay: sr.pay + amount)
     # end
+
+    def save_new_record_to_activity
+        json_data = {
+            employee: self.employee.name,
+            user: self.subscription_record.client.name,
+            amount: self.amount,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+        }
+        create_activity_record(action_type: 'create' ,table_name: 'payment' ,json_data: json_data)
+    end
+
+    def save_deleted_record_to_activity
+        json_data = {
+            employee: self.employee.name,
+            user: self.subscription_record.client.name,
+            amount: self.amount,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+        }
+        create_activity_record(action_type: 'delete' ,table_name: 'payment' ,json_data: json_data)
+        # Activity.create(
+        #     employee_name: Current.employee.name,
+        #     action_type: 'delete',
+        #     table_name: 'client',
+        #     json_data: self.to_json
+        # )
+    end
+
+
+    def create_activity_record( action_type: ,table_name: ,json_data: )
+        Activity.create(
+            employee_name: Current.employee.name,
+            action_type: action_type,
+            table_name: table_name,
+            json_data: json_data.to_json
+        )
+    end
       
 end
   
