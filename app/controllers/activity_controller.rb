@@ -2,6 +2,13 @@ class ActivityController  < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
+    # if the current user is not admin then they can not elevate an employee to become admin
+    if current_employee.role != 'admin'
+      render json: {message: 'You are not authorized to perform this action'}, status: 401
+      return
+    end
+
+    
     total_records = Activity.count
 
     if total_records == 0
