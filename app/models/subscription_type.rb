@@ -22,12 +22,7 @@ class SubscriptionType < ApplicationRecord
                 updated_at: self.updated_at,
             }
             create_activity_record(action_type: 'create' ,table_name: 'subscription type' ,json_data: json_data)
-            # Activity.create(
-            #     employee_name: Current.employee.name,
-            #     action_type: 'create',
-            #     table_name: 'client',
-            #     json_data: self.to_json
-            # )
+            
         end
 
         def save_deleted_record_to_activity
