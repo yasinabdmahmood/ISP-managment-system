@@ -45,12 +45,6 @@ class Employee < ApplicationRecord
     #       updated_at: self.updated_at
     #     }
     #     create_activity_record(action_type: 'delete' ,table_name: 'Employee' ,json_data: json_data)
-    #     # Activity.create(
-    #     #     employee_name: Current.employee.name,
-    #     #     action_type: 'delete',
-    #     #     table_name: 'client',
-    #     #     json_data: self.to_json
-    #     # )
     # end
 
     # def save_record_changes_to_activity
