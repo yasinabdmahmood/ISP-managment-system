@@ -53,12 +53,6 @@ class SubscriptionType < ApplicationRecord
             }
             merged_hash = json_data.merge(changes_made)
             create_activity_record(action_type: 'update' ,table_name: 'subscription type' ,json_data: changes_made)
-            # Activity.create(
-            #     employee_name: Current.employee.name,
-            #     action_type: 'update',
-            #     table_name: 'client',
-            #     json_data: changes_made.to_json
-            # )
         end
 
         def create_activity_record( action_type: ,table_name: ,json_data: )
