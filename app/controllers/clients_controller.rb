@@ -13,8 +13,10 @@ class ClientsController < ApplicationController
     name = params[:new_client][:name]
     username = params[:new_client][:username]
     contact_info = params[:new_client][:contact_info]
+    info = params[:new_client][:info]
     coordinate = params[:new_client][:coordinate]
-    @new_client = Client.new(name: name, username: username, coordinate: coordinate)
+    
+    @new_client = Client.new(name: name, username: username,info: info, coordinate: coordinate)
     if @new_client.save 
       @contact_info = ClientContactInformation.create(client: @new_client, contact_info: contact_info)
       # render json: @new_client.as_json(include: { client_contact_informations: { only: [:contact_info] } })
