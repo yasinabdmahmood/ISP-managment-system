@@ -60,4 +60,8 @@ Rails.application.routes.draw do
 
   #Activity related routes
   get 'activities/index' => 'activity#index', as: 'activirties'
+
+  # Report related routes
+  get 'reports/get_daily_report' => 'report#get_daily_report', as: 'get_daily_report'
+  
 end
