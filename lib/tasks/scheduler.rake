@@ -65,7 +65,7 @@ task test_report: :environment do
     todays_report = DailyReport.create(
         data: {
             date: today,
-            some_dummy_data: {
+            report: {
                 payment_statistics: {
                     sum_of_total_payment: sum_of_total_payment,
                     sum_of_category_payment: sum_of_category_payment
