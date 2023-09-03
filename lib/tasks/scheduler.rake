@@ -21,50 +21,50 @@ task test_report: :environment do
     # Use the category as the key and profit as the value in the hash
     category_profit_hash[subscription_type.category] = subscription_type.profit.to_i
     end
-    p category_profit_hash
+    # p category_profit_hash
 
     # Initialize the variables
-    sum_of_paied_money = 0
-    pi_chart_for_paied_money = {}
-    sum_of_profit = 0
-    pi_chart_of_profit = {}
+    sum_of_total_payment = 0
+    sum_of_category_payment = {}
+    sum_of_total_profit = 0
+    sum_of_category_profit = {}
 
     # Assuming records_created_last_24_hours is an array of PaymentRecord objects
     records_created_last_24_hours.each do |item|
         category = item.subscription_record.category
         # 1. Add item.amount to the sum
-        sum_of_paied_money += item.amount.to_i
+        sum_of_total_payment += item.amount.to_i
         profit_from_current_payment = (category_profit_hash[category]*(item.amount / item.subscription_record.cost)).to_i
-        sum_of_profit += profit_from_current_payment
-        p "category => #{category}"
-        p "total profit for this category => #{category_profit_hash[category]}"
-        p "paid amount => #{item.amount.to_i}"
-        p "total cost for this category => #{item.subscription_record.cost.to_i}"
-        p "profit for the current pay => #{profit_from_current_payment}"
-        p "---------------------------------------------------"
+        sum_of_total_profit += profit_from_current_payment
+        # p "category => #{category}"
+        # p "total profit for this category => #{category_profit_hash[category]}"
+        # p "paid amount => #{item.amount.to_i}"
+        # p "total cost for this category => #{item.subscription_record.cost.to_i}"
+        # p "profit for the current pay => #{profit_from_current_payment}"
+        # p "---------------------------------------------------"
         
 
         
         
         # 2. Check item.subscription_record.category and update the pi_chart
         
-        if pi_chart_for_paied_money.key?(category)
-            pi_chart_for_paied_money[category] += item.amount.to_i
+        if sum_of_category_payment.key?(category)
+            sum_of_category_payment[category] += item.amount.to_i
         else
-            pi_chart_for_paied_money[category] = item.amount.to_i
+            sum_of_category_payment[category] = item.amount.to_i
         end
 
-        if pi_chart_of_profit.key?(category)
-            pi_chart_of_profit[category] += profit_from_current_payment.to_i
+        if sum_of_category_profit.key?(category)
+            sum_of_category_profit[category] += profit_from_current_payment.to_i
         else
-            pi_chart_of_profit[category] = profit_from_current_payment.to_i
+            sum_of_category_profit[category] = profit_from_current_payment.to_i
         end
     end
 
-    p sum_of_paied_money
-    p pi_chart_for_paied_money
-    p "sum of profit => #{sum_of_profit}"
-    p "profit pi chart => #{pi_chart_of_profit}"
+    p "sum_of_total_payment => #{sum_of_total_payment}"
+    p "sum_of_category_payment => #{sum_of_category_payment}"
+    p "sum of profit => #{sum_of_total_profit}"
+    p "profit pi chart => #{sum_of_category_profit}"
 
     # Now, you have the sum of item.amount in the 'sum' variable
     # and the pi_chart hash with categories as keys and their sums as values
@@ -78,12 +78,12 @@ task test_report: :environment do
             date: today,
             some_dummy_data: {
                 payment_statistics: {
-                    sum_of_total_payment: sum_of_paied_money,
-                    sum_of_category_payment: pi_chart_for_paied_money
+                    sum_of_total_payment: sum_of_total_payment,
+                    sum_of_category_payment: sum_of_category_payment
                 },
                 profit_statistics: {
-                    sum_of_total_profit: sum_of_profit,
-                    sum_of_category_profit: pi_chart_of_profit
+                    sum_of_total_profit: sum_of_total_profit,
+                    sum_of_category_profit: sum_of_category_profit
                 }
             },
             report_type: 'Daily'
