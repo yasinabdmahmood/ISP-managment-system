@@ -33,6 +33,10 @@ task test_report: :environment do
         # Add payment_record.amount to the sum_of_total_payment
         sum_of_total_payment += payment_record.amount.to_i
 
+        puts "Category: #{category}"
+        puts "Category Profit: #{category_profit_hash[category]}"
+
+
         #calculate the profit for the current payment_record
         profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
 
