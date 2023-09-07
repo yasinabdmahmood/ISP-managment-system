@@ -8,13 +8,13 @@ task test_report: :environment do
         .joins(:subscription_record)
         .where("payment_records.created_at >= ?", 24.hours.ago)
 
-    subscription_types = SubscriptionType.all; 
+    subscription_types = SubscriptionType.all
     # Initialize an empty hash
     category_profit_hash = {}
     # Iterate through the SubscriptionTypes
     subscription_types.each do |subscription_type|
     # Use the category as the key and profit as the value and store it in the hash table
-    category_profit_hash[subscription_type.category] = subscription_type.profit.to_i
+    category_profit_hash[subscription_type.category] = subscription_type.profit
     end
 
     # Initialize the variables to store the daily report
@@ -32,9 +32,6 @@ task test_report: :environment do
 
         # Add payment_record.amount to the sum_of_total_payment
         sum_of_total_payment += payment_record.amount.to_i
-
-        puts "Category: #{category}"
-        puts "Category Profit: #{category_profit_hash[category]}"
 
 
         #calculate the profit for the current payment_record
