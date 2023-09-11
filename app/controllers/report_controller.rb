@@ -5,6 +5,10 @@ class ReportController < ApplicationController
         year = params[:date][:year].to_i
         month = params[:date][:month].to_i
         day = params[:date][:day].to_i
+
+        # year = 2023
+        # month = 9
+        # day = 11
       
         # Create a Date object from the parameters
         date_to_query = Date.new(year, month, day)
