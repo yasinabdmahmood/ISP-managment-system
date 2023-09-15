@@ -1,7 +1,7 @@
 class PaymentRecord < ApplicationRecord
     # after_create :update_associated_subscription_record
 
-    after_create :save_new_record_to_activity
+    after_create :excute_after_payment_record_creation_callbacks
     after_destroy :save_deleted_record_to_activity
 
     validate :check_for_overpay
@@ -13,6 +13,14 @@ class PaymentRecord < ApplicationRecord
     validates :amount, numericality: true, presence: true
 
     private
+
+    def excute_after_payment_record_creation_callbacks
+
+        save_new_record_to_activity
+
+        update_daily_report
+
+    end
 
     def check_for_overpay
         subscription_fee = self.subscription_record.subscription_type.cost
@@ -40,6 +48,12 @@ class PaymentRecord < ApplicationRecord
             updated_at: self.updated_at,
         }
         create_activity_record(action_type: 'create' ,table_name: 'payment' ,json_data: json_data)
+    end
+
+    def update_daily_report
+        p 'OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO'
+        p self
+        p 'OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO'
     end
 
     def save_deleted_record_to_activity
