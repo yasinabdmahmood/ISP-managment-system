@@ -78,8 +78,6 @@ class PaymentRecord < ApplicationRecord
     # }
 
     def update_daily_report
-        p 'oooooooooooooooooooooooooooooo'
-        today = DateTime.now
         latest_record = DailyReport.last
 
         if latest_record && latest_record.created_at.to_date == Date.today
@@ -87,23 +85,9 @@ class PaymentRecord < ApplicationRecord
           add_current_payment_to_daily_report
           puts "The last record was created today."
         else
-          # The last record was not created today or there are no records in the table
-            todays_report = DailyReport.create(
-                    data: {
-                        date: today,
-                        report: {
-                            payment_statistics: {
-                                sum_of_total_payment: 0,
-                                sum_of_category_payment: {}
-                            },
-                            profit_statistics: {
-                                sum_of_total_profit: 0,
-                                sum_of_category_profit: {}
-                            }
-                        },
-                        report_type: 'Daily'
-                    }
-            )
+            # The last record was not created today or there are no records in the table
+            create_empty_daily_record_for_today
+            
             add_current_payment_to_daily_report
             puts "The last record was not created today or there are no records in the table."
         end
@@ -148,6 +132,7 @@ class PaymentRecord < ApplicationRecord
         sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
         sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
         sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
+        date = data['date']
         payment_record = self
         # Get the category to which the current payment record belongs 
         category = payment_record.subscription_record.category
@@ -178,7 +163,7 @@ class PaymentRecord < ApplicationRecord
 
         daily_report.update(
             data: {
-                date: DateTime.now,
+                date: date,
                 report: {
                     payment_statistics: {
                         sum_of_total_payment: sum_of_total_payment,
@@ -195,9 +180,26 @@ class PaymentRecord < ApplicationRecord
 
     end
 
-    
+    def create_empty_daily_record_for_today
+        today = Date.now
 
-
-      
+        todays_report = DailyReport.create(
+                data: {
+                    date: today,
+                    report: {
+                        payment_statistics: {
+                            sum_of_total_payment: 0,
+                            sum_of_category_payment: {}
+                        },
+                        profit_statistics: {
+                            sum_of_total_profit: 0,
+                            sum_of_category_profit: {}
+                        }
+                    },
+                    report_type: 'Daily'
+                }
+        )
+    end 
+  
 end
   
