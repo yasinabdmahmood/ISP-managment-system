@@ -6,7 +6,8 @@ class PaymentRecord < ApplicationRecord
     # after_create :update_associated_subscription_record
 
     after_create :excute_after_payment_record_creation_callbacks
-    after_destroy :save_deleted_record_to_activity
+    after_destroy :excute_after_payment_record_deletion_callbacks
+    # after_destroy :save_deleted_record_to_activity
 
     validate :check_for_overpay
     
@@ -24,6 +25,11 @@ class PaymentRecord < ApplicationRecord
 
         update_daily_report
 
+    end
+
+    def excute_after_payment_record_deletion_callbacks
+        save_deleted_record_to_activity
+        remove_current_payment_from_daily_report
     end
 
     def check_for_overpay
@@ -200,6 +206,81 @@ class PaymentRecord < ApplicationRecord
                 }
         )
     end 
+
+    def remove_current_payment_from_daily_report
+        payment_record = self
+        payment_date = payment_record.created_at.to_date
+  
+        daily_report = DailyReport.find_by(created_at: payment_date.beginning_of_day..payment_date.end_of_day)
+        p 'oooooooooooooooooo'
+        p daily_report
+
+        data = daily_report.data
+
+        sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
+        sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
+        sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
+        sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
+        date = data['date']
+
+        subscription_types = SubscriptionType.all
+        # Initialize an empty hash
+        category_profit_hash = {}
+        # Iterate through the SubscriptionTypes
+        subscription_types.each do |subscription_type|
+            # Use the category as the key and profit as the value and store it in the hash table
+            category_profit_hash[subscription_type.category] = subscription_type.profit
+        end
+
+        # Get the category to which the current payment record belongs 
+        category = payment_record.subscription_record.category
+
+        # Add payment_record.amount to the sum_of_total_payment
+        sum_of_total_payment -= payment_record.amount.to_i
+
+
+        #calculate the profit for the current payment_record
+        profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
+
+        # Add the calculated profit to the sum_of_total_profit
+        sum_of_total_profit -= profit_from_current_payment
+   
+        # Add the payment record amount to the corresponding category in the sum_of_category_payment hash
+        if sum_of_category_payment.key?(category)
+            sum_of_category_payment[category] -= payment_record.amount.to_i
+        end
+
+        # Add the profit for the current payment record to the corresponding category in the sum_of_category_profit hash
+        if sum_of_category_profit.key?(category)
+            sum_of_category_profit[category] -= profit_from_current_payment.to_i
+        end
+
+        daily_report.update(
+            data: {
+                date: date,
+                report: {
+                    payment_statistics: {
+                        sum_of_total_payment: sum_of_total_payment,
+                        sum_of_category_payment: sum_of_category_payment
+                    },
+                    profit_statistics: {
+                        sum_of_total_profit: sum_of_total_profit,
+                        sum_of_category_profit: sum_of_category_profit
+                    }
+                },
+                report_type: 'Daily'
+            }
+        )
+
+        
+        
+        if daily_report
+          # Do something with the found daily_report
+        else
+          # Handle the case where no matching daily_report is found
+        end
+    end
+      
   
 end
   
