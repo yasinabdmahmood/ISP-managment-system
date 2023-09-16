@@ -1,4 +1,8 @@
+require 'date'
+require 'json'
+
 class PaymentRecord < ApplicationRecord
+
     # after_create :update_associated_subscription_record
 
     after_create :excute_after_payment_record_creation_callbacks
@@ -50,10 +54,59 @@ class PaymentRecord < ApplicationRecord
         create_activity_record(action_type: 'create' ,table_name: 'payment' ,json_data: json_data)
     end
 
+    # create_table "daily_reports", force: :cascade do |t|
+    #     t.jsonb "data"
+    #     t.datetime "created_at", null: false
+    #     t.datetime "updated_at", null: false
+    # end
+
+    # {
+    #     "data": {
+    #         "date": "today",
+    #         "report": {
+    #         "payment_statistics": {
+    #             "sum_of_total_payment": "sum_of_total_payment",
+    #             "sum_of_category_payment": "sum_of_category_payment"
+    #         },
+    #         "profit_statistics": {
+    #             "sum_of_total_profit": "sum_of_total_profit",
+    #             "sum_of_category_profit": "sum_of_category_profit"
+    #         }
+    #         },
+    #         "report_type": "Daily"
+    #     }
+    # }
+
     def update_daily_report
-        p 'OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO'
-        p self
-        p 'OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO'
+        p 'oooooooooooooooooooooooooooooo'
+        today = DateTime.now
+        latest_record = DailyReport.last
+
+        if latest_record && latest_record.created_at.to_date == Date.today
+          # The last record was created today
+          add_current_payment_to_daily_report
+          puts "The last record was created today."
+        else
+          # The last record was not created today or there are no records in the table
+            todays_report = DailyReport.create(
+                    data: {
+                        date: today,
+                        report: {
+                            payment_statistics: {
+                                sum_of_total_payment: 0,
+                                sum_of_category_payment: {}
+                            },
+                            profit_statistics: {
+                                sum_of_total_profit: 0,
+                                sum_of_category_profit: {}
+                            }
+                        },
+                        report_type: 'Daily'
+                    }
+            )
+            add_current_payment_to_daily_report
+            puts "The last record was not created today or there are no records in the table."
+        end
     end
 
     def save_deleted_record_to_activity
@@ -76,6 +129,75 @@ class PaymentRecord < ApplicationRecord
             json_data: json_data.to_json
         )
     end
+
+    def add_current_payment_to_daily_report
+
+        subscription_types = SubscriptionType.all
+        # Initialize an empty hash
+        category_profit_hash = {}
+        # Iterate through the SubscriptionTypes
+        subscription_types.each do |subscription_type|
+            # Use the category as the key and profit as the value and store it in the hash table
+            category_profit_hash[subscription_type.category] = subscription_type.profit
+        end
+
+        daily_report = DailyReport.last;
+        data = daily_report.data
+
+        sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
+        sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
+        sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
+        sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
+        payment_record = self
+        # Get the category to which the current payment record belongs 
+        category = payment_record.subscription_record.category
+
+        # Add payment_record.amount to the sum_of_total_payment
+        sum_of_total_payment += payment_record.amount.to_i
+
+
+        #calculate the profit for the current payment_record
+        profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
+
+        # Add the calculated profit to the sum_of_total_profit
+        sum_of_total_profit += profit_from_current_payment
+   
+        # Add the payment record amount to the corresponding category in the sum_of_category_payment hash
+        if sum_of_category_payment.key?(category)
+            sum_of_category_payment[category] += payment_record.amount.to_i
+        else
+            sum_of_category_payment[category] = payment_record.amount.to_i
+        end
+
+        # Add the profit for the current payment record to the corresponding category in the sum_of_category_profit hash
+        if sum_of_category_profit.key?(category)
+            sum_of_category_profit[category] += profit_from_current_payment.to_i
+        else
+            sum_of_category_profit[category] = profit_from_current_payment.to_i
+        end
+
+        daily_report.update(
+            data: {
+                date: DateTime.now,
+                report: {
+                    payment_statistics: {
+                        sum_of_total_payment: sum_of_total_payment,
+                        sum_of_category_payment: sum_of_category_payment
+                    },
+                    profit_statistics: {
+                        sum_of_total_profit: sum_of_total_profit,
+                        sum_of_category_profit: sum_of_category_profit
+                    }
+                },
+                report_type: 'Daily'
+            }
+        )
+
+    end
+
+    
+
+
       
 end
   
