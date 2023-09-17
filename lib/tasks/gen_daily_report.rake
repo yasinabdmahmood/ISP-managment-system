@@ -45,7 +45,20 @@ task gen_daily_report: :environment do
 
 
             #calculate the profit for the current payment_record
-            profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
+            category_profit = category_profit_hash[category]
+
+            if category_profit.nil?
+            # Handle the case when category_profit is nil
+            # You can set a default value, log an error, or handle it in another way
+            p 'oooooooooooooo0000000000000000000000'
+            p category
+            p category_profit_hash
+            else
+            profit_from_current_payment = (category_profit * (payment_record.amount / payment_record.subscription_record.cost)).to_i
+            # The rest of your code that depends on profit_from_current_payment
+            end
+
+            # profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
 
             # Add the calculated profit to the sum_of_total_profit
             sum_of_total_profit += profit_from_current_payment
