@@ -56,12 +56,14 @@ task gen_daily_report: :environment do
             else
             profit_from_current_payment = (category_profit * (payment_record.amount / payment_record.subscription_record.cost)).to_i
             # The rest of your code that depends on profit_from_current_payment
+
+            # Add the calculated profit to the sum_of_total_profit
+            sum_of_total_profit += profit_from_current_payment
             end
 
             # profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
 
-            # Add the calculated profit to the sum_of_total_profit
-            sum_of_total_profit += profit_from_current_payment
+           
     
             # Add the payment record amount to the corresponding category in the sum_of_category_payment hash
             if sum_of_category_payment.key?(category)
