@@ -235,7 +235,7 @@ class PaymentRecord < ApplicationRecord
         end
 
         # Get the category to which the current payment record belongs 
-        category = payment_record.subscription_record.category
+        category = payment_record.subscription_record.subscription_type.category
 
         # Add payment_record.amount to the sum_of_total_payment
         sum_of_total_payment -= payment_record.amount.to_i
