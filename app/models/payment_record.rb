@@ -214,8 +214,7 @@ class PaymentRecord < ApplicationRecord
         payment_date = payment_record.created_at.to_date
   
         daily_report = DailyReport.find_by(created_at: payment_date.beginning_of_day..payment_date.end_of_day)
-        p 'oooooooooooooooooo'
-        p daily_report
+
 
         data = daily_report.data
 
