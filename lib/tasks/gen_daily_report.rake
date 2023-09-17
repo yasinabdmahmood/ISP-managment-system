@@ -38,7 +38,7 @@ task gen_daily_report: :environment do
         records_to_process.each do |payment_record|
 
             # Get the category to which the current payment record belongs 
-            category = payment_record.subscription_record.category
+            category = payment_record.subscription_record.subscription_type.category
 
             # Add payment_record.amount to the sum_of_total_payment
             sum_of_total_payment += payment_record.amount.to_i
@@ -47,23 +47,25 @@ task gen_daily_report: :environment do
             #calculate the profit for the current payment_record
             category_profit = category_profit_hash[category]
 
-            if category_profit.nil?
-            # Handle the case when category_profit is nil
-            # You can set a default value, log an error, or handle it in another way
-            p 'oooooooooooooo0000000000000000000000'
-            p category
-            p category_profit_hash
-            else
             profit_from_current_payment = (category_profit * (payment_record.amount / payment_record.subscription_record.cost)).to_i
-            # The rest of your code that depends on profit_from_current_payment
 
-            # Add the calculated profit to the sum_of_total_profit
-            sum_of_total_profit += profit_from_current_payment
-            end
+            # if category_profit.nil?
+            # # Handle the case when category_profit is nil
+            # # You can set a default value, log an error, or handle it in another way
+            # p 'oooooooooooooo0000000000000000000000'
+            # p category
+            # p category_profit_hash
+            # else
+            # profit_from_current_payment = (category_profit * (payment_record.amount / payment_record.subscription_record.cost)).to_i
+            # # The rest of your code that depends on profit_from_current_payment
+
+            
+            # end
 
             # profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
 
-           
+            # Add the calculated profit to the sum_of_total_profit
+            sum_of_total_profit += profit_from_current_payment
     
             # Add the payment record amount to the corresponding category in the sum_of_category_payment hash
             if sum_of_category_payment.key?(category)
