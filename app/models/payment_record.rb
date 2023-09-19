@@ -189,7 +189,7 @@ class PaymentRecord < ApplicationRecord
     end
 
     def create_empty_daily_record_for_today
-        today = Date.now
+        today = DateTime.now
 
         todays_report = DailyReport.create(
                 data: {
