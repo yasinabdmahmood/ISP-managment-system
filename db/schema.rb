@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_18_071928) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_25_172327) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_071928) do
     t.jsonb "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "monthly_report_id"
+    t.index ["monthly_report_id"], name: "index_daily_reports_on_monthly_report_id"
   end
 
   create_table "employee_contact_information", force: :cascade do |t|
@@ -111,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_071928) do
   end
 
   add_foreign_key "client_contact_information", "clients"
+  add_foreign_key "daily_reports", "monthly_reports"
   add_foreign_key "employee_contact_information", "employees"
   add_foreign_key "payment_records", "employees"
   add_foreign_key "payment_records", "subscription_records"
