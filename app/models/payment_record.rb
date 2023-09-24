@@ -85,7 +85,7 @@ class PaymentRecord < ApplicationRecord
 
     def update_daily_report
         latest_record = DailyReport.last
-
+        
         if latest_record && latest_record.created_at.to_date == Date.today
           # The last record was created today
           add_current_payment_to_daily_report
@@ -122,14 +122,14 @@ class PaymentRecord < ApplicationRecord
 
     def add_current_payment_to_daily_report
 
-        subscription_types = SubscriptionType.all
-        # Initialize an empty hash
-        category_profit_hash = {}
-        # Iterate through the SubscriptionTypes
-        subscription_types.each do |subscription_type|
-            # Use the category as the key and profit as the value and store it in the hash table
-            category_profit_hash[subscription_type.category] = subscription_type.profit
-        end
+        # subscription_types = SubscriptionType.all
+        # # Initialize an empty hash
+        # category_profit_hash = {}
+        # # Iterate through the SubscriptionTypes
+        # subscription_types.each do |subscription_type|
+        #     # Use the category as the key and profit as the value and store it in the hash table
+        #     category_profit_hash[subscription_type.category] = subscription_type.profit
+        # end
 
         daily_report = DailyReport.last;
         data = daily_report.data
@@ -145,10 +145,11 @@ class PaymentRecord < ApplicationRecord
 
         # Add payment_record.amount to the sum_of_total_payment
         sum_of_total_payment += payment_record.amount.to_i
+        category_profit = payment_record.subscription_record.subscription_type.profit
 
         #calculate the profit for the current payment_record
-        profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
-
+        profit_from_current_payment = (category_profit*(payment_record.amount / payment_record.subscription_record.cost)).to_i
+        
         # Add the calculated profit to the sum_of_total_profit
         sum_of_total_profit += profit_from_current_payment
    
@@ -186,6 +187,7 @@ class PaymentRecord < ApplicationRecord
     end
 
     def create_empty_daily_record_for_today
+        byebug
         today = DateTime.now
 
         todays_report = DailyReport.create(
@@ -222,23 +224,24 @@ class PaymentRecord < ApplicationRecord
         date = data['date']
 
         subscription_types = SubscriptionType.all
-        # Initialize an empty hash
-        category_profit_hash = {}
-        # Iterate through the SubscriptionTypes
-        subscription_types.each do |subscription_type|
-            # Use the category as the key and profit as the value and store it in the hash table
-            category_profit_hash[subscription_type.category] = subscription_type.profit
-        end
+        # # Initialize an empty hash
+        # category_profit_hash = {}
+        # # Iterate through the SubscriptionTypes
+        # subscription_types.each do |subscription_type|
+        #     # Use the category as the key and profit as the value and store it in the hash table
+        #     category_profit_hash[subscription_type.category] = subscription_type.profit
+        # end
 
         # Get the category to which the current payment record belongs 
         category = payment_record.subscription_record.subscription_type.category
 
         # Add payment_record.amount to the sum_of_total_payment
         sum_of_total_payment -= payment_record.amount.to_i
+        category_profit = payment_record.subscription_record.subscription_type.profit
 
 
         #calculate the profit for the current payment_record
-        profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
+        profit_from_current_payment = (category_profit*(payment_record.amount / payment_record.subscription_record.cost)).to_i
 
         # Add the calculated profit to the sum_of_total_profit
         sum_of_total_profit -= profit_from_current_payment
