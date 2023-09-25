@@ -2,12 +2,18 @@ desc "gen_daily_report"
 require 'date'
 task gen_daily_report: :environment do
 
-    one_month_ago = 30.days.ago.to_date
+
+    DailyReport.all.each do |record|
+        record.destroy
+    end
+
+    one_month_ago = 60.days.ago.to_date
     today = Date.today
 
+    # Initialize an empty hash
+    category_profit_hash = {}
+
     subscription_types = SubscriptionType.all
-        # Initialize an empty hash
-        category_profit_hash = {}
         # Iterate through the SubscriptionTypes
         subscription_types.each do |subscription_type|
         # Use the category as the key and profit as the value and store it in the hash table
@@ -45,7 +51,7 @@ task gen_daily_report: :environment do
 
 
             #calculate the profit for the current payment_record
-            category_profit = category_profit_hash[category]
+            category_profit = payment_record.subscription_record.subscription_type.profit
 
             profit_from_current_payment = (category_profit * (payment_record.amount / payment_record.subscription_record.cost)).to_i
 
