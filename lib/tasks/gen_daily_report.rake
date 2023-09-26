@@ -23,9 +23,6 @@ task gen_daily_report: :environment do
     while one_month_ago <= today do
         records_to_process = PaymentRecord.where(created_at: one_month_ago.beginning_of_day..one_month_ago.end_of_day)
         
-        # Do something with the records
-        p one_month_ago
-        p records_to_process.count
 
         # records_created_last_24_hours = PaymentRecord
         #     .joins(:subscription_record)
