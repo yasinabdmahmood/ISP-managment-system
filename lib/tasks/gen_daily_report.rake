@@ -7,6 +7,12 @@ task gen_daily_report: :environment do
         record.destroy
     end
 
+    MonthlyReport.all.each do |record|
+        record.destroy
+    end
+
+
+
     one_month_ago = 60.days.ago.to_date
     today = Date.today
 
