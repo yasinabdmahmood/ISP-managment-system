@@ -9,16 +9,23 @@ class DailyReport < ApplicationRecord
     private
 
     def excute_after_daily_report_creation_callbacks
-        last_monthly_report = MonthlyReport.last
+        last_monthly_report = MonthlyReport.last 
         current_month = self.created_at.month
-       
         if last_monthly_report.nil? || last_monthly_report.created_at.month != current_month
-            last_monthly_report = create_new_monthly_report
+            new_monthly_report = create_new_monthly_report
+            self.monthly_report = new_monthly_report
+            if !self.save
+                # byebug
+            end
+        else
+            self.monthly_report = last_monthly_report
+            if !self.save
+                # byebug
+            end
+
         end
 
-        self.monthly_report = last_monthly_report
-
-        add_current_daily_report_to_monthly_report
+        add_previous_daily_report_to_monthly_report
     end
 
     def create_new_monthly_report
@@ -44,11 +51,17 @@ class DailyReport < ApplicationRecord
         current_monthly_report
     end
 
-    def add_current_daily_report_to_monthly_report
-        daily_report = self;
+    def add_previous_daily_report_to_monthly_report
+        daily_report = DailyReport.find_by(id: self.id - 1)
+        return if daily_report.nil?
         monthly_report = daily_report.monthly_report
         daily_data = daily_report.data
+
+        if monthly_report.nil?
+            byebug
+        end
         monthly_data = monthly_report.data
+        
 
         daily_sum_of_total_payment = daily_data['report']['payment_statistics']['sum_of_total_payment']
         daily_sum_of_category_payment = daily_data['report']['payment_statistics']['sum_of_category_payment']
