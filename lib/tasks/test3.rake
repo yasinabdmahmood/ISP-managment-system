@@ -15,6 +15,7 @@ task test3: :environment do
     p "Number of payment records ==> #{records_on_specific_date.count}"
     p "Sum of payment records ===> #{sum}"
     p "Sum of pay  records accouding to daily report ===> #{daily_report.data['report']['payment_statistics']['sum_of_total_payment']}"
+    p "daily report date ===> #{daily_report.created_at}"
 
 
 end
