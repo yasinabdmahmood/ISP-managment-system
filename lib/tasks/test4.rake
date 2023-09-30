@@ -6,7 +6,7 @@ task test4: :environment do
 
     # Query records created on the specific date
     daily_reports = DailyReport.where(created_at: specific_date.beginning_of_day..specific_date.end_of_day)
-    monthly_report = daily_report.monthly_report.first
+    monthly_report = daily_report.first.monthly_report
     sum = 0
     daily_reports.each do |daily_report|
         payment = daily_report.data['report']['payment_statistics']['sum_of_total_payment']
