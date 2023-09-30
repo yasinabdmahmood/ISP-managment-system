@@ -6,13 +6,15 @@ task test3: :environment do
 
     # Query records created on the specific date
     records_on_specific_date = PaymentRecord.where(created_at: specific_date.beginning_of_day..specific_date.end_of_day)
+    daily_report = DailyReport.where(created_at: specific_date.beginning_of_day..specific_date.end_of_day).first
     sum = 0
     records_on_specific_date.each do |payment|
         sum+= payment.amount
         p "#{payment.created_at.strftime('%Y/%-m/%-d')} ===> #{payment.amount}"
     end
-    p records_on_specific_date.count
-    p sum
+    p "Number of payment records ==> #{records_on_specific_date.count}"
+    p "Sum of payment records ===> #{sum}"
+    p "Sum of pay  records accouding to daily report ===> #{daily_report.data['report']['payment_statistics']['sum_of_total_payment']}"
 
 
 end
