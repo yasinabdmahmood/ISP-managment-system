@@ -7,10 +7,11 @@ class ReportController < ApplicationController
         day = params[:date][:day].to_i
       
         # Create a Date object from the parameters
-        date_to_query = Date.new(year, month, day)
-      
+        # date_to_query = Date.new(year, month, day)
+        date_to_query = Date.parse("#{year}-#{month}-#{day}")
+       
         # Find the first daily report created on the specified date
-        daily_report = DailyReport.where("DATE(created_at) = ?", date_to_query).order(created_at: :asc).first
+        daily_report = DailyReport.where(created_at: date_to_query.beginning_of_day..date_to_query.end_of_day).first
       
         if daily_report
           render json: daily_report
