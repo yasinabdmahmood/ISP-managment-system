@@ -2,7 +2,7 @@ desc "gen_daily_report"
 require 'date'
 task gen_daily_report: :environment do
 
-
+    
     DailyReport.all.each do |record|
         record.destroy
     end
@@ -13,7 +13,7 @@ task gen_daily_report: :environment do
 
 
 
-    one_month_ago = 60.days.ago.to_date
+    one_month_ago = specific_date = Date.parse("2023-08-01")
     today = Date.today
 
     # Initialize an empty hash
@@ -117,7 +117,7 @@ task gen_daily_report: :environment do
             }
         )
         
-        one_month_ago += 1.day
+        one_month_ago += 1
     end
     
 
