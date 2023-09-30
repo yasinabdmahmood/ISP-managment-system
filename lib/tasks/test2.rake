@@ -16,5 +16,6 @@ task test2: :environment do
     p '+++++++++++++++++++++++++++++++++++++'
     p "sum of daily reports payment ===> #{payment}"
     p '+++++++++++++++++++++++++++++++++++++'
-    p "munber of daily reports  ===> #{daily_reports.count}"
+    p "number of daily reports  ===> #{daily_reports.count}"
+    p monthly_report
 end
