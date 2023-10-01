@@ -29,7 +29,7 @@ task gen_daily_report: :environment do
     while one_month_ago <= today do
         records_to_process = PaymentRecord.where(created_at: one_month_ago.beginning_of_day..one_month_ago.end_of_day)
         
-
+        p records_to_process if one_month_ago == today
         # records_created_last_24_hours = PaymentRecord
         #     .joins(:subscription_record)
         #     .where("payment_records.created_at >= ?", 24.hours.ago)
