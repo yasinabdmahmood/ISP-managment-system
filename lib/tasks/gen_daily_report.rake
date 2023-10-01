@@ -16,15 +16,15 @@ task gen_daily_report: :environment do
     one_month_ago = specific_date = Date.parse("2023-08-01")
     today = Date.today
 
-    # Initialize an empty hash
-    category_profit_hash = {}
+    # # Initialize an empty hash
+    # category_profit_hash = {}
 
-    subscription_types = SubscriptionType.all
-        # Iterate through the SubscriptionTypes
-        subscription_types.each do |subscription_type|
-        # Use the category as the key and profit as the value and store it in the hash table
-        category_profit_hash[subscription_type.category] = subscription_type.profit
-    end
+    # subscription_types = SubscriptionType.all
+    # # Iterate through the SubscriptionTypes
+    # subscription_types.each do |subscription_type|
+    #     # Use the category as the key and profit as the value and store it in the hash table
+    #     category_profit_hash[subscription_type.category] = subscription_type.profit
+    # end
 
     while one_month_ago <= today do
         records_to_process = PaymentRecord.where(created_at: one_month_ago.beginning_of_day..one_month_ago.end_of_day)
