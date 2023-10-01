@@ -84,19 +84,10 @@ class PaymentRecord < ApplicationRecord
     # }
 
     def update_daily_report
-        latest_record = DailyReport.last
-        
-        if latest_record && latest_record.created_at.to_date == Date.today
-          # The last record was created today
-          add_current_payment_to_daily_report
-          puts "The last record was created today."
-        else
-            # The last record was not created today or there are no records in the table
-            create_empty_daily_record_for_today
-            
-            add_current_payment_to_daily_report
-            puts "The last record was not created today or there are no records in the table."
-        end
+        payment_date = self.created_at.to_date
+        daily_report = DailyReport.where(created_at: payment_date.beginning_of_day..payment_date.end_of_day).first
+        daily_report = create_empty_daily_record_for_current_payment(payment_date) if daily_report.nil?
+        add_current_payment_to_belonged_daily_report(daily_report)
     end
 
     def save_deleted_record_to_activity
@@ -120,7 +111,7 @@ class PaymentRecord < ApplicationRecord
         )
     end
 
-    def add_current_payment_to_daily_report
+    def add_current_payment_to_belonged_daily_report(daily_report)
 
         # subscription_types = SubscriptionType.all
         # # Initialize an empty hash
@@ -131,7 +122,6 @@ class PaymentRecord < ApplicationRecord
         #     category_profit_hash[subscription_type.category] = subscription_type.profit
         # end
 
-        daily_report = DailyReport.last;
         data = daily_report.data
 
         sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
@@ -186,12 +176,10 @@ class PaymentRecord < ApplicationRecord
 
     end
 
-    def create_empty_daily_record_for_today
-        today = Date.today
-
-        todays_report = DailyReport.create(
+    def create_empty_daily_record_for_current_payment(payment_date)
+        daily_report = DailyReport.create(
                 data: {
-                    date: today,
+                    date: payment_date,
                     report: {
                         payment_statistics: {
                             sum_of_total_payment: 0,
@@ -205,6 +193,7 @@ class PaymentRecord < ApplicationRecord
                     report_type: 'Daily'
                 }
         )
+        daily_report
     end 
 
     def remove_current_payment_from_daily_report
