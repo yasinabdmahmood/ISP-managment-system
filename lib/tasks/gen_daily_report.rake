@@ -13,8 +13,8 @@ task gen_daily_report: :environment do
 
 
 
-    one_month_ago = specific_date = Date.parse("2023-08-01")
-    today = Date.parse("2023-10-02")
+    start_date = specific_date = Date.parse("2023-08-01")
+    end_date = Date.parse("2023-10-02")
 
     # # Initialize an empty hash
     # category_profit_hash = {}
@@ -26,14 +26,8 @@ task gen_daily_report: :environment do
     #     category_profit_hash[subscription_type.category] = subscription_type.profit
     # end
 
-    while one_month_ago <= today do
-        records_to_process = PaymentRecord.where(created_at: one_month_ago.beginning_of_day..one_month_ago.end_of_day)
-        
-        p records_to_process if one_month_ago == today
-        # records_created_last_24_hours = PaymentRecord
-        #     .joins(:subscription_record)
-        #     .where("payment_records.created_at >= ?", 24.hours.ago)
-
+    while start_date <= end_date do
+        records_to_process = PaymentRecord.where(created_at: start_date.beginning_of_day..start_date.end_of_day)
         
 
         # Initialize the variables to store the daily report
@@ -58,20 +52,6 @@ task gen_daily_report: :environment do
 
             profit_from_current_payment = (category_profit * (payment_record.amount / payment_record.subscription_record.cost)).to_i
 
-            # if category_profit.nil?
-            # # Handle the case when category_profit is nil
-            # # You can set a default value, log an error, or handle it in another way
-            # p 'oooooooooooooo0000000000000000000000'
-            # p category
-            # p category_profit_hash
-            # else
-            # profit_from_current_payment = (category_profit * (payment_record.amount / payment_record.subscription_record.cost)).to_i
-            # # The rest of your code that depends on profit_from_current_payment
-
-            
-            # end
-
-            # profit_from_current_payment = (category_profit_hash[category]*(payment_record.amount / payment_record.subscription_record.cost)).to_i
 
             # Add the calculated profit to the sum_of_total_profit
             sum_of_total_profit += profit_from_current_payment
@@ -91,18 +71,12 @@ task gen_daily_report: :environment do
             end
         end
         
-        # the follwing commented code are for the testing purpose
-        # p "sum_of_total_payment => #{sum_of_total_payment}"
-        # p "sum_of_category_payment => #{sum_of_category_payment}"
-        # p "sum of profit => #{sum_of_total_profit}"
-        # p "profit pi chart => #{sum_of_category_profit}"
-
 
         # Create the daily report
         todays_report = DailyReport.create(
-            created_at: one_month_ago,
+            created_at: start_date,
             data: {
-                date: one_month_ago,
+                date: start_date,
                 report: {
                     payment_statistics: {
                         sum_of_total_payment: sum_of_total_payment,
@@ -117,7 +91,7 @@ task gen_daily_report: :environment do
             }
         )
         
-        one_month_ago += 1
+        start_date += 1
     end
     
 
