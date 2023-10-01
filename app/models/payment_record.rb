@@ -85,7 +85,7 @@ class PaymentRecord < ApplicationRecord
 
     def update_daily_report
         payment_date = self.created_at.to_date
-        daily_report = DailyReport.where(created_at: payment_date.beginning_of_day..payment_date.end_of_day).first
+        daily_report = DailyReport.find_by(created_at: payment_date.beginning_of_day..payment_date.end_of_day)
         daily_report = create_empty_daily_record_for_current_payment(payment_date) if daily_report.nil?
         add_current_payment_to_belonged_daily_report(daily_report)
     end
@@ -211,15 +211,6 @@ class PaymentRecord < ApplicationRecord
         sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
         date = data['date']
 
-        subscription_types = SubscriptionType.all
-        # # Initialize an empty hash
-        # category_profit_hash = {}
-        # # Iterate through the SubscriptionTypes
-        # subscription_types.each do |subscription_type|
-        #     # Use the category as the key and profit as the value and store it in the hash table
-        #     category_profit_hash[subscription_type.category] = subscription_type.profit
-        # end
-
         # Get the category to which the current payment record belongs 
         category = payment_record.subscription_record.subscription_type.category
 
@@ -261,13 +252,6 @@ class PaymentRecord < ApplicationRecord
             }
         )
 
-        
-        
-        if daily_report
-          # Do something with the found daily_report
-        else
-          # Handle the case where no matching daily_report is found
-        end
     end
       
   
