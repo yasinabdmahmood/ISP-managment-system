@@ -14,7 +14,7 @@ task gen_daily_report: :environment do
 
 
     one_month_ago = specific_date = Date.parse("2023-08-01")
-    today = Date.today
+    today = Date.parse("2023-10-02")
 
     # # Initialize an empty hash
     # category_profit_hash = {}
