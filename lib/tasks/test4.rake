@@ -2,9 +2,9 @@ desc "test4"
 require 'date'
 task test4: :environment do
 
-    start_date = Date.parse("2023-09-1")
+    start_date = Date.parse("2023-08-1")
 
-    end_date = Date.parse("2023-09-30")
+    end_date = Date.parse("2023-08-30")
 
     sum_of_payment = 0
     sum_of_profit = 0
