@@ -19,13 +19,20 @@ task test4: :environment do
         sum_of_profit +=profit
         p "#{daily_report.created_at.strftime('%Y/%-m/%-d')} ===> #{payment} ===> #{profit}"
     end
-    monthly_report_payment = 
+    monthly_report_payment = monthly_report.data['report']['payment_statistics']['sum_of_total_payment']
+    monthly_report_profit = monthly_report.data['report']['profit_statistics']['sum_of_total_profit']
     p '==============================='
     p "Tested Sum of total payment = #{sum_of_payment}"
-    p "Actual Sum of total payment = #{monthly_report.data['report']['payment_statistics']['sum_of_total_payment']}"
+    p "Actual Sum of total payment = #{monthly_report_payment}"
     p "Tested Sum of total profit = #{sum_of_profit}"
-    p "Actual Sum of total profit = #{monthly_report.data['report']['profit_statistics']['sum_of_total_profit']}"
+    p "Actual Sum of total profit = #{monthly_report_profit}"
 
-    if sum_of_payment == 
+    if sum_of_payment == monthly_report_payment
+        p 'payment summation test was passed '
+    end
+
+    if sum_of_profit == monthly_report_profit
+        p 'profit summation test was passed '
+    end
 
 end
