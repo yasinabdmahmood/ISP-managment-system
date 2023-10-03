@@ -19,6 +19,11 @@ class ReportController < ApplicationController
           render json: { error: "No daily report found for the specified date" }, status: :not_found
         end
       end
+
+      def get_monthly_report
+        year = params[:date][:year].to_i
+        month = params[:date][:month].to_i
+      end
       
 
 end
