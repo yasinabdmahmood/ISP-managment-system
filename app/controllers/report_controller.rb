@@ -11,7 +11,7 @@ class ReportController < ApplicationController
         date_to_query = Date.parse("#{year}-#{month}-#{day}")
        
         # Find the first daily report created on the specified date
-        daily_report = DailyReport.where(created_at: date_to_query.beginning_of_day..date_to_query.end_of_day).first
+        daily_report = DailyReport.find_by(created_at: date_to_query.beginning_of_day..date_to_query.end_of_day)
       
         if daily_report
           render json: daily_report
