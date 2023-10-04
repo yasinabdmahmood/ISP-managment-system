@@ -6,16 +6,32 @@ task test3: :environment do
 
     # Query records created on the specific date
     records_on_specific_date = PaymentRecord.where(created_at: specific_date.beginning_of_day..specific_date.end_of_day)
-    daily_report = DailyReport.where(created_at: specific_date.beginning_of_day..specific_date.end_of_day).first
-    sum = 0
+    daily_report = DailyReport.find_by(created_at: specific_date.beginning_of_day..specific_date.end_of_day)
+    sum_of_payment = 0
+    sum_of_profit = 0
     records_on_specific_date.each do |payment|
-        sum+= payment.amount
+        sum_of_payment+= payment.amount
+        profit = payment.subscription_record.subscription_type.profit
+        cost = payment.subscription_record.subscription_type.cost
+        payed_amount = payment.amount
+        sum_of_profit+= payed_amount*profit/cost
+        sum_of_payment += payed_amount
         p "#{payment.created_at.strftime('%Y/%-m/%-d')} ===> #{payment.amount}"
     end
-    p "Number of payment records ==> #{records_on_specific_date.count}"
-    p "Sum of payment records ===> #{sum}"
-    p "Sum of pay  records accouding to daily report ===> #{daily_report.data['report']['payment_statistics']['sum_of_total_payment']}"
-    p "daily report date ===> #{daily_report.created_at}"
+    report_sum_of_payment = daily_report.data['report']['payment_statistics']['sum_of_total_payment']
+    report_sum_of_profit = daily_report.data['report']['profit_statistics']['sum_of_total_profit']
+    p "Calculated sum of payment from test ==> #{sum_of_payment}"
+    p "Calculated sum of payment from report ===> #{report_sum_of_payment}"
+    p "Calculated sum of profit from test ==> #{sum_of_profit}"
+    p "Calculated sum of profit from report ===> #{report_sum_of_profit}"
+
+    if sum_of_payment == report_sum_of_payment
+        p "The test for payment report was passed"
+    end
+
+    if sum_of_profit == report_sum_of_profit
+        p "The test for profit report was passed"
+    end
 
 
 end
