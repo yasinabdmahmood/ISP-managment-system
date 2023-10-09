@@ -57,11 +57,11 @@ class BackupsController < ApplicationController
     # Generate CSV data
     csv_data = CSV.generate do |csv|
       # Write headers
-      csv << ['Client', 'Employee', 'Amount']
+      csv << ['Client', 'Employee', 'Amount', 'Date']
 
       # Write data rows
       data.each do |row|
-        csv << [row.subscription_record.client.name, row.employee.name, row.amount]
+        csv << [row.subscription_record.client.name, row.employee.name, row.amount, row.created_at]
       end
     end
 
