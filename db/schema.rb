@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_25_172327) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_10_193335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_25_172327) do
     t.string "action_type"
     t.string "table_name"
     t.text "json_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "agents", force: :cascade do |t|
+    t.string "name"
+    t.text "info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -70,6 +77,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_25_172327) do
     t.index ["reset_password_token"], name: "index_employees_on_reset_password_token", unique: true
   end
 
+  create_table "ledgers", force: :cascade do |t|
+    t.bigint "agent_id"
+    t.date "date"
+    t.integer "withdraw"
+    t.integer "deposit"
+    t.json "detail"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_ledgers_on_agent_id"
+    t.index ["date"], name: "index_ledgers_on_date"
+  end
+
   create_table "monthly_reports", force: :cascade do |t|
     t.jsonb "data"
     t.datetime "created_at", null: false
@@ -115,6 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_25_172327) do
   add_foreign_key "client_contact_information", "clients"
   add_foreign_key "daily_reports", "monthly_reports"
   add_foreign_key "employee_contact_information", "employees"
+  add_foreign_key "ledgers", "agents"
   add_foreign_key "payment_records", "employees"
   add_foreign_key "payment_records", "subscription_records"
   add_foreign_key "subscription_records", "clients"
