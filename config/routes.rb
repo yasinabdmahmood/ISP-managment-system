@@ -64,5 +64,8 @@ Rails.application.routes.draw do
   # Report related routes
   get 'reports/get_daily_report' => 'report#get_daily_report', as: 'get_daily_report'
   get 'reports/get_monthly_report' => 'report#get_monthly_report', as: 'get_monthly_report'
+
+  # test related routes
+  get 'test' => 'test#test', as: 'test'
   
 end
