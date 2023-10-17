@@ -67,5 +67,8 @@ Rails.application.routes.draw do
 
   # test related routes
   get 'test' => 'test#test', as: 'test'
+
+  # Agent related routes
+  get 'agents/get_agents' => 'agents#get_agents', as: 'get_agents' 
   
 end
