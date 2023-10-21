@@ -70,5 +70,7 @@ Rails.application.routes.draw do
 
   # Agent related routes
   get 'agents/get_agents' => 'agents#get_agents', as: 'get_agents' 
+  get 'agents/create_agent' => 'agents#create', as: 'create_agent'
+  get 'agents/destroy_agent' => 'agents#destroy', as: 'destroy_agent'
   
 end
