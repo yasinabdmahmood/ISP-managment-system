@@ -4,8 +4,8 @@ class AgentsController < ApplicationController
     end
 
     def create
-        name = params[:new_agent][:name]
-        info = params[:new_agent][:info]
+        name = params[:name]
+        info = params[:info]
         
         new_agent = Agent.new(name: name, info: info)
         if new_agent.save 
