@@ -16,7 +16,7 @@ class Ledger < ApplicationRecord
    def detail_withdraw_mismatch
       sum = 0
       detail.each_value do |value|
-        sum+= value
+        sum+= value.to_i
       end
 
       if sum != withdraw
