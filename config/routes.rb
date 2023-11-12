@@ -72,5 +72,18 @@ Rails.application.routes.draw do
   get 'agents/get_agents' => 'agents#get_agents', as: 'get_agents' 
   get 'agents/create_agent' => 'agents#create', as: 'create_agent'
   get 'agents/destroy_agent' => 'agents#destroy', as: 'destroy_agent'
+  get 'agents/update_agent' => 'agents#update', as: 'update_agent'
+
+  # Company related routes
+  get 'comanies/get_comanies' => 'company#get_companies', as: 'get_companies' 
+  get 'comanies/create_company' => 'company#create', as: 'create_company'
+  get 'companies/destroy_company' => 'company#destroy', as: 'destroy_company'
+  get 'companies/update_company' => 'company#update', as: 'update_company'
+
+  # Ledger related routes
+  get 'ledgers/get_ledgers' => 'ledger#get_ledgers', as: 'get_ledgers' 
+  get 'ledgers/create_ledger' => 'ledger#create', as: 'create_ledger'
+  get 'ledgers/destroy_ledger' => 'ledger#destroy', as: 'destroy_ledger'
+  get 'ledgers/update_ledger' => 'ledger#update', as: 'update_ledger'
   
 end
