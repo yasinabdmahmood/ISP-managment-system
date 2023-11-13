@@ -2,7 +2,7 @@ class LedgerController < ApplicationController
     def get_ledgers
         ledgers = Ledger.order(created_at: :desc).includes(:agent)
         render json: ledgers, include: { 
-          agent: { only: [:name] }, 
+          agent: { only: [:name, :info] }, 
         }
     end
 
