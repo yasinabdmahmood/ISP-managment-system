@@ -44,12 +44,18 @@ class LedgerController < ApplicationController
         end
     end
 
+    def add_to_deposit
+        ledger_id = params[:id]
+        deposit = params[:deposit]
+        ledger = Ledger.find(ledger_id)
+        ledger.deposit += deposit.to_i
+        if ledger.save
+            render json: ledger, include: { 
+                agent: { only: [:name, :info] }, 
+            }
+        else
+            render json: {message: 'error'}, status: 400
+        end
 
-    # ledger = Ledger.new(
-    #         agent: agent,
-    #         date: Date.parse("2023-5-1"),
-    #         withdraw: 50000,
-    #         deposit: 0,
-    #         detail: {type1: 25000, type2: 25000}
-    #     )
+    end
 end

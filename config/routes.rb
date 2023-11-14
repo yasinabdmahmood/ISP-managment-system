@@ -84,6 +84,7 @@ Rails.application.routes.draw do
   get 'ledgers/get_ledgers' => 'ledger#get_ledgers', as: 'get_ledgers' 
   get 'ledgers/create_ledger' => 'ledger#create', as: 'create_ledger'
   get 'ledgers/destroy_ledger' => 'ledger#destroy', as: 'destroy_ledger'
+  get 'ledgers/add_to_deposit' => 'ledger#add_to_deposit', as: 'add_to_deposit'
   get 'ledgers/update_ledger' => 'ledger#update', as: 'update_ledger'
   
 end
