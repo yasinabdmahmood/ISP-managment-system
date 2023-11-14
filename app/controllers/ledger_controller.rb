@@ -10,6 +10,7 @@ class LedgerController < ApplicationController
         agent_id = params[:agent_id]
         detail = params[:detail] # detail: {type1: 25000, type2: 25000}
         date = params[:date]  # "2023-5-1"
+        deposit = params[:deposit]
 
         withdraw = 0
         detail.each_value do |value|
@@ -21,7 +22,8 @@ class LedgerController < ApplicationController
                 date: Date.parse(date),
                 withdraw: withdraw,
                 deposit: 0,
-                detail: detail
+                detail: detail,
+                deposit: deposit
             )  
         if ledger.save
             render json: ledger, include: { 
