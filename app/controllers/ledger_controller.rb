@@ -58,4 +58,15 @@ class LedgerController < ApplicationController
         end
 
     end
+
+    def history
+        id =params[:id]
+        agent = Agent.find(id)
+        ledgers = agent.ledgers.order(created_at: :desc).as_json(include: { 
+          agent: { only: [:name, :info] },  
+        })
+    
+        render json: ledgers
+    
+      end
 end
