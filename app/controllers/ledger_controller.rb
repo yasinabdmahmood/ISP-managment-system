@@ -1,9 +1,38 @@
 class LedgerController < ApplicationController
     def get_ledgers
-        ledgers = Ledger.order(created_at: :desc).includes(:agent)
+        # Get the id parameter from the request
+        record_id = params[:id]
+
+        if record_id
+            # Case 1: Find the record with the given id
+            base_record = Ledger.find_by(id: record_id)
+
+            # Check if the Ledger model is empty
+            if base_record.nil?
+                render json: []
+                return
+            end
+
+            # Fetch the next 50 records based on the date
+            ledgers = Ledger
+                            .where('date < ?', base_record.date)
+                            .order(date: :desc)
+                            .limit(50)
+        else
+            # Case 3: If id is not provided, return the first 50 records based on date
+            ledgers = Ledger
+                            .order(date: :desc) # Order by the most recent date
+                            .limit(50)
+        end
+
+        #render json: next_records.includes(:agent)
         render json: ledgers, include: { 
           agent: { only: [:name, :info] }, 
         }
+        # ledgers = Ledger.order(created_at: :desc).includes(:agent)
+        # render json: ledgers, include: { 
+        #   agent: { only: [:name, :info] }, 
+        # }
     end
 
     def create
