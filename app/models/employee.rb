@@ -11,7 +11,7 @@ class Employee < ApplicationRecord
     validates_associated :subscription_records
     validates_associated :payment_records
     validates :name, uniqueness: true, presence: true, length: { minimum: 3, maximum: 30 }
-    validates :role, presence: true, inclusion: { in: %w(admin employee) }
+    validates :role, presence: true, inclusion: { in: %w(admin admin_plus employee) }
 
     # after_create :save_new_record_to_activity
     # after_destroy :save_deleted_record_to_activity
