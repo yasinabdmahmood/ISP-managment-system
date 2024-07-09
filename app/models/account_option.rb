@@ -1,0 +1,2 @@
+class AccountOption < ApplicationRecord
+end
