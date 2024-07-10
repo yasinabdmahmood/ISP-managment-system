@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_06_095626) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_09_191059) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -89,6 +89,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_06_095626) do
     t.index ["reset_password_token"], name: "index_employees_on_reset_password_token", unique: true
   end
 
+  create_table "expenses", force: :cascade do |t|
+    t.decimal "amount"
+    t.date "date"
+    t.string "remark"
+    t.string "status"
+    t.bigint "account_option_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_option_id"], name: "index_expenses_on_account_option_id"
+  end
+
   create_table "ledgers", force: :cascade do |t|
     t.bigint "agent_id"
     t.date "date"
@@ -146,6 +157,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_06_095626) do
   add_foreign_key "client_contact_information", "clients"
   add_foreign_key "daily_reports", "monthly_reports"
   add_foreign_key "employee_contact_information", "employees"
+  add_foreign_key "expenses", "account_options"
   add_foreign_key "ledgers", "agents"
   add_foreign_key "payment_records", "employees"
   add_foreign_key "payment_records", "subscription_records"
