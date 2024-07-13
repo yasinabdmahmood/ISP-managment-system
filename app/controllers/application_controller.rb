@@ -2,12 +2,16 @@ class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
   
   protect_from_forgery with: :exception
-
-  before_action :update_allowed_parameters, if: :devise_controller?
-
-  before_action :authenticate_employee!, :set_current_employee
-
   
+  before_action :update_allowed_parameters, if: :devise_controller?
+  
+  before_action :authenticate_employee!, :set_current_employee
+  
+   load_and_authorize_resource unless: :devise_controller?
+  
+  rescue_from CanCan::AccessDenied do |exception|
+    render json: { error: exception.message }, status: :forbidden
+  end
 
   protected
 
