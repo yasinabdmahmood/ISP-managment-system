@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
   #Employees record related routes
   root "employee#index"
   post '/employee/update/:id'=> 'employee#update', as: 'update_employee'
@@ -87,5 +88,8 @@ Rails.application.routes.draw do
   get 'ledgers/add_to_deposit' => 'ledger#add_to_deposit', as: 'add_to_deposit'
   get 'ledgers/update_ledger' => 'ledger#update', as: 'update_ledger'
   get 'ledgers/agent_history' => 'ledger#history', as: 'agent_history'
+
+  # Expense related routes
+  get 'expenses/get_expenses' => 'expenses#get_expenses', as: 'get_expenses'
   
 end
