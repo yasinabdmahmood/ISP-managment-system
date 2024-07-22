@@ -1,8 +1,10 @@
 class ExpensesController < ApplicationController
   def get_expenses
-    expenses = Expense.order(created_at: :desc).includes(:account_option).page(params[:page]).per(20)
-    # expenses = Expense.all.includes(:account_option)
-    render json: expenses, include: { account_option: { only: [:id, :options] } }
+    expenses = Expense.order(created_at: :desc).includes(:account_option, :employee).page(params[:page]).per(20)
+    render json: expenses, include: { 
+      account_option: { only: [:id, :options] },
+      employee: { only: [:name] },  
+    }
   end
 
   def get_account_options
@@ -10,7 +12,7 @@ class ExpensesController < ApplicationController
   end
 
   def create_expense
-    # employee_id = @current_employee.id
+    employee = @current_employee
     amount = params[:amount]
     remark = params[:remark]
     date = params[:date]
@@ -23,10 +25,14 @@ class ExpensesController < ApplicationController
             amount: amount,
             remark: remark,
             account_option: account_option,
-            status: 'pending'
+            status: 'pending',
+            employee: employee
         )  
     if expense.save
-        render json: expense, include: { account_option: { only: [:id, :options] } 
+        render json: expense, include: { 
+          account_option: { only: [:id, :options],
+          employee: { only: [:name] }, 
+         } 
     }, status: 200
     else
         render json: {message: 'error'}, status: 400
