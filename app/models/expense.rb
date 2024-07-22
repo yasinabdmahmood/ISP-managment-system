@@ -1,5 +1,6 @@
 class Expense < ApplicationRecord
     belongs_to :account_option
+    belongs_to :employee
 
     validates :amount, presence: true, numericality: true
     validates :date, presence: true

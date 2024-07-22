@@ -6,6 +6,7 @@ class Employee < ApplicationRecord
     has_many :employee_contact_information
     has_many :subscription_records
     has_many :payment_records
+    has_many :expenses
 
     validates_associated :employee_contact_information
     validates_associated :subscription_records
