@@ -37,5 +37,26 @@ class ExpensesController < ApplicationController
     else
         render json: {message: 'error'}, status: 400
     end
-end
+  end
+
+  def update_expense_status
+    #param = {id,newStatus}
+    id = params[:id]
+    newStatus = params[:newStatus]
+    expense = Expense.find(id)
+    expense.status = newStatus;
+    if expense.save
+        render json: expense, include: { 
+          account_option: { only: [:id, :options],
+          employee: { only: [:name] }, 
+         } 
+    }, status: 200
+    else 
+        p '000000000000000'
+        p expense.errors.full_messages.join(", ")
+        render json: {message: 'error'}, status: 400
+    end
+
+  end
+  
 end
