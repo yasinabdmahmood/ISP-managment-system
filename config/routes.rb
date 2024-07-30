@@ -90,6 +90,7 @@ Rails.application.routes.draw do
   get 'ledgers/agent_history' => 'ledger#history', as: 'agent_history'
 
   # Expense related routes
+  get 'expenses/get_pending_expenses' => 'expenses#get_pending_expenses', as: 'get_pending_expenses'
   get 'expenses/get_expenses' => 'expenses#get_expenses', as: 'get_expenses'
   get 'expenses/get_account_options' => 'expenses#get_account_options', as: 'get_account_options'
   get 'expenses/create_expense' => 'expenses#create_expense', as: 'create_expense'

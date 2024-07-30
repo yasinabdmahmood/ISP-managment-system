@@ -7,6 +7,19 @@ class ExpensesController < ApplicationController
     }
   end
 
+  def get_pending_expenses
+    expenses = Expense.where(status: 'pending')
+                      .order(created_at: :desc)
+                      .includes(:account_option, :employee)
+                      .page(params[:page])
+                      .per(20)
+    render json: expenses, include: { 
+      account_option: { only: [:id, :options] },
+      employee: { only: [:name] },  
+    }
+  end
+  
+
   def get_account_options
     render json: AccountOption.all
   end
@@ -52,8 +65,6 @@ class ExpensesController < ApplicationController
          } 
     }, status: 200
     else 
-        p '000000000000000'
-        p expense.errors.full_messages.join(", ")
         render json: {message: 'error'}, status: 400
     end
 
