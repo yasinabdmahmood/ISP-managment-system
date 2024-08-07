@@ -126,6 +126,8 @@ class PaymentRecord < ApplicationRecord
 
         sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
         sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
+        sum_of_expenses = data['report']['payment_statistics']['sum_of_expenses']
+        trial_balance = data['report']['payment_statistics']['trial_balance']
         sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
         sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
         date = data['date']
@@ -157,13 +159,18 @@ class PaymentRecord < ApplicationRecord
             sum_of_category_profit[category] = profit_from_current_payment.to_i
         end
 
+        # Add the payment record amount to the trial balance
+        trial_balance += payment_record.amount.to_i
+
         daily_report.update(
             data: {
                 date: date,
                 report: {
                     payment_statistics: {
                         sum_of_total_payment: sum_of_total_payment,
-                        sum_of_category_payment: sum_of_category_payment
+                        sum_of_category_payment: sum_of_category_payment,
+                        sum_of_expenses: sum_of_expenses,
+                        trial_balance: trial_balance
                     },
                     profit_statistics: {
                         sum_of_total_profit: sum_of_total_profit,
@@ -183,6 +190,8 @@ class PaymentRecord < ApplicationRecord
                     report: {
                         payment_statistics: {
                             sum_of_total_payment: 0,
+                            some_of_expenses: 0,
+                            trial_balance: 0,
                             sum_of_category_payment: {}
                         },
                         profit_statistics: {
@@ -207,6 +216,8 @@ class PaymentRecord < ApplicationRecord
 
         sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
         sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
+        sum_of_expenses = data['report']['payment_statistics']['sum_of_expenses']
+        trial_balance = data['report']['payment_statistics']['trial_balance']
         sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
         sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
         date = data['date']
@@ -235,13 +246,18 @@ class PaymentRecord < ApplicationRecord
             sum_of_category_profit[category] -= profit_from_current_payment.to_i
         end
 
+        # Add the payment record amount to the trial balance
+        trial_balance -= payment_record.amount.to_i
+
         daily_report.update(
             data: {
                 date: date,
                 report: {
                     payment_statistics: {
                         sum_of_total_payment: sum_of_total_payment,
-                        sum_of_category_payment: sum_of_category_payment
+                        sum_of_category_payment: sum_of_category_payment,
+                        sum_of_expenses: sum_of_expenses,
+                        trial_balance: trial_balance
                     },
                     profit_statistics: {
                         sum_of_total_profit: sum_of_total_profit,
