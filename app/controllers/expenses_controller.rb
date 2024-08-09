@@ -48,6 +48,11 @@ class ExpensesController < ApplicationController
          } 
     }, status: 200
     else
+        p '000000000000000'
+        expense.errors.full_messages.each do |message|
+          puts "- #{message}"
+        end
+        p '00000000000000'
         render json: {message: 'error'}, status: 400
     end
   end
