@@ -160,6 +160,7 @@ class PaymentRecord < ApplicationRecord
         end
 
         # Add the payment record amount to the trial balance
+        trial_balance = trial_balance.to_i
         trial_balance += payment_record.amount.to_i
 
         daily_report.update(
@@ -190,7 +191,7 @@ class PaymentRecord < ApplicationRecord
                     report: {
                         payment_statistics: {
                             sum_of_total_payment: 0,
-                            some_of_expenses: 0,
+                            sum_of_expenses: 0,
                             trial_balance: 0,
                             sum_of_category_payment: {}
                         },
@@ -247,6 +248,7 @@ class PaymentRecord < ApplicationRecord
         end
 
         # Add the payment record amount to the trial balance
+        trial_balance = trial_balance.to_i
         trial_balance -= payment_record.amount.to_i
 
         daily_report.update(
