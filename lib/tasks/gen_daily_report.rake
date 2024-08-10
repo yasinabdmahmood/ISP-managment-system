@@ -35,6 +35,8 @@ task gen_daily_report: :environment do
         sum_of_category_payment = {}
         sum_of_total_profit = 0
         sum_of_category_profit = {}
+        sum_of_expenses = 0
+        trial_balance = 0
 
         # Iterate through all the payment records created in the last 24 hours
         # and calculate the daily report accordingly 
@@ -71,7 +73,9 @@ task gen_daily_report: :environment do
             end
         end
         
-
+        sum_of_expenses = (rand(0..sum_of_total_payment) / 1000) * 1000
+        trial_balance = sum_of_total_payment - sum_of_expenses
+        
         # Create the daily report
         todays_report = DailyReport.create(
             created_at: start_date,
@@ -80,6 +84,8 @@ task gen_daily_report: :environment do
                 report: {
                     payment_statistics: {
                         sum_of_total_payment: sum_of_total_payment,
+                        sum_of_expenses: sum_of_expenses,
+                        trial_balance: trial_balance,
                         sum_of_category_payment: sum_of_category_payment
                     },
                     profit_statistics: {
