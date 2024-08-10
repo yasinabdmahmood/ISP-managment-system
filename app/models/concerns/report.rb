@@ -35,7 +35,6 @@ module Report
         # date = data['date']
 
         trial_balance, sum_of_expenses = extract_daily_report_data(data,[:trial_balance, :sum_of_expenses]) 
-        byebug
         trial_balance -= amount
         sum_of_expenses = sum_of_expenses.to_i
         sum_of_expenses += amount
