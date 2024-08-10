@@ -1,5 +1,5 @@
 desc "task9"
-# This task updates all the daily report as well as monthly report
+# This task updates all the daily and monthly report as well as monthly report
 # records and adds sum_of_expenses and trial_balance key the data field hash of
 # corresponding daily and monthly report 
 task task9: :environment do
