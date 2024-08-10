@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   get 'expenses/get_pending_expenses' => 'expenses#get_pending_expenses', as: 'get_pending_expenses'
   get 'expenses/get_expenses' => 'expenses#get_expenses', as: 'get_expenses'
   get 'expenses/get_account_options' => 'expenses#get_account_options', as: 'get_account_options'
+  get 'expenses/create_account_options' => 'expenses#create_account_options', as: 'create_account_options'
   get 'expenses/create_expense' => 'expenses#create_expense', as: 'create_expense'
   get 'expenses/update_expense_status' => 'expenses#update_expense_status', as: 'update_expense_status'
 end

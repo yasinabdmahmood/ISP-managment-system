@@ -24,6 +24,16 @@ class ExpensesController < ApplicationController
     render json: AccountOption.all
   end
 
+  def create_account_options
+    options = params[:options]
+    account_option = AccountOption.new(options: options)
+    if account_option.save
+        render json: account_option, status: 200
+    else
+        render json: {message: 'error'}, status: 400
+    end
+  end
+
   def create_expense
     employee = @current_employee
     amount = params[:amount]
