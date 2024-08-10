@@ -12,32 +12,31 @@ class Expense < ApplicationRecord
     validates :status, presence: true, inclusion: { in: %w[pending rejected approved] }
     validate :must_have_corresponding_daily_report, on: :update
     validate :amount_must_not_be_greator_than_trial_balance, on: :update
+    
 
     private
 
     def must_have_corresponding_daily_report
-        if status_changed? && status > 'approved'
-            return
+        if status_changed? && status == 'approved'
+            expense_date = Time.zone.now
+            daily_report = DailyReport.find_by(created_at: expense_date.beginning_of_day..expense_date.end_of_day)
+            errors.add(:amount, "No corresponding daily report for this expense") if daily_report.nil?
         end
-        expense_date = Time.zone.now
-        daily_report = DailyReport.find_by(created_at: expense_date.beginning_of_day..expense_date.end_of_day)
-        errors.add(:amount, "No corresponding daily report for this expense") if daily_report.nil?
-
     end
 
     def amount_must_not_be_greator_than_trial_balance
-        if status_changed? && status > 'approved'
-            return
+        if status_changed? && status == 'approved'
+            expense_date = Time.zone.now
+            daily_report = DailyReport.find_by(created_at: expense_date.beginning_of_day..expense_date.end_of_day)
+            trial_balance = daily_report.data['report']['payment_statistics']['trial_balance'] rescue nil
+            errors.add(:amount, "Expense Amount must not be greator than trial balance") if !trial_balance.nil? && trial_balance < self.amount
         end
-        expense_date = Time.zone.now
-        daily_report = DailyReport.find_by(created_at: expense_date.beginning_of_day..expense_date.end_of_day)
-        trial_balance = daily_report.data['report']['payment_statistics']['trial_balance']
-        errors.add(:amount, "Expense Amount must not be greator than trial balance") if trial_balance < self.amount
+       
     end
 
     def update_daily_report
         if saved_change_to_status? && status == 'approved'
-            expense_date = self.created_at.to_date
+            expense_date = Time.zone.now
             daily_report = DailyReport.find_by(created_at: expense_date.beginning_of_day..expense_date.end_of_day)
             add_current_expense_to_belonged_daily_report(self,daily_report)
         end
