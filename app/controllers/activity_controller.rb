@@ -3,7 +3,7 @@ class ActivityController  < ApplicationController
 
   def index
     # if the current user is not admin then they can not elevate an employee to become admin
-    if current_employee.role != 'admin'
+    if current_employee.role == 'employee'
       render json: {message: 'You are not authorized to perform this action'}, status: 401
       return
     end
