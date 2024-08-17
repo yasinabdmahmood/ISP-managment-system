@@ -2,7 +2,7 @@ require 'date'
 require 'json'
 
 class PaymentRecord < ApplicationRecord
-
+    include Report
     # after_create :update_associated_subscription_record
 
     after_create :excute_after_payment_record_creation_callbacks
@@ -29,7 +29,7 @@ class PaymentRecord < ApplicationRecord
 
     def excute_after_payment_record_deletion_callbacks
         save_deleted_record_to_activity
-        remove_current_payment_from_daily_report
+        remove_current_payment_from_daily_report(self)
     end
 
     def check_for_overpay
@@ -87,7 +87,7 @@ class PaymentRecord < ApplicationRecord
         payment_date = self.created_at.to_date
         daily_report = DailyReport.find_by(created_at: payment_date.beginning_of_day..payment_date.end_of_day)
         daily_report = create_empty_daily_record_for_current_payment(payment_date) if daily_report.nil?
-        add_current_payment_to_belonged_daily_report(daily_report)
+        add_current_payment_to_belonged_daily_report(daily_report,self)
     end
 
     def save_deleted_record_to_activity
@@ -111,167 +111,5 @@ class PaymentRecord < ApplicationRecord
         )
     end
 
-    def add_current_payment_to_belonged_daily_report(daily_report)
-
-        # subscription_types = SubscriptionType.all
-        # # Initialize an empty hash
-        # category_profit_hash = {}
-        # # Iterate through the SubscriptionTypes
-        # subscription_types.each do |subscription_type|
-        #     # Use the category as the key and profit as the value and store it in the hash table
-        #     category_profit_hash[subscription_type.category] = subscription_type.profit
-        # end
-
-        data = daily_report.data
-
-        sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
-        sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
-        sum_of_expenses = data['report']['payment_statistics']['sum_of_expenses']
-        trial_balance = data['report']['payment_statistics']['trial_balance']
-        sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
-        sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
-        date = data['date']
-        payment_record = self
-        # Get the category to which the current payment record belongs 
-        category = payment_record.subscription_record.subscription_type.category
-
-        # Add payment_record.amount to the sum_of_total_payment
-        sum_of_total_payment += payment_record.amount.to_i
-        category_profit = payment_record.subscription_record.subscription_type.profit
-
-        #calculate the profit for the current payment_record
-        profit_from_current_payment = (category_profit*(payment_record.amount / payment_record.subscription_record.cost)).to_i
-        
-        # Add the calculated profit to the sum_of_total_profit
-        sum_of_total_profit += profit_from_current_payment
-   
-        # Add the payment record amount to the corresponding category in the sum_of_category_payment hash
-        if sum_of_category_payment.key?(category)
-            sum_of_category_payment[category] += payment_record.amount.to_i
-        else
-            sum_of_category_payment[category] = payment_record.amount.to_i
-        end
-
-        # Add the profit for the current payment record to the corresponding category in the sum_of_category_profit hash
-        if sum_of_category_profit.key?(category)
-            sum_of_category_profit[category] += profit_from_current_payment.to_i
-        else
-            sum_of_category_profit[category] = profit_from_current_payment.to_i
-        end
-
-        # Add the payment record amount to the trial balance
-        trial_balance = trial_balance.to_i
-        trial_balance += payment_record.amount.to_i
-
-        daily_report.update(
-            data: {
-                date: date,
-                report: {
-                    payment_statistics: {
-                        sum_of_total_payment: sum_of_total_payment,
-                        sum_of_category_payment: sum_of_category_payment,
-                        sum_of_expenses: sum_of_expenses,
-                        trial_balance: trial_balance
-                    },
-                    profit_statistics: {
-                        sum_of_total_profit: sum_of_total_profit,
-                        sum_of_category_profit: sum_of_category_profit
-                    }
-                },
-                report_type: 'Daily'
-            }
-        )
-
-    end
-
-    def create_empty_daily_record_for_current_payment(payment_date)
-        daily_report = DailyReport.create(
-                data: {
-                    date: payment_date,
-                    report: {
-                        payment_statistics: {
-                            sum_of_total_payment: 0,
-                            sum_of_expenses: 0,
-                            trial_balance: 0,
-                            sum_of_category_payment: {}
-                        },
-                        profit_statistics: {
-                            sum_of_total_profit: 0,
-                            sum_of_category_profit: {}
-                        }
-                    },
-                    report_type: 'Daily'
-                }
-        )
-        daily_report
-    end 
-
-    def remove_current_payment_from_daily_report
-        payment_record = self
-        payment_date = payment_record.created_at.to_date
-  
-        daily_report = DailyReport.find_by(created_at: payment_date.beginning_of_day..payment_date.end_of_day)
-
-
-        data = daily_report.data
-
-        sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
-        sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
-        sum_of_expenses = data['report']['payment_statistics']['sum_of_expenses']
-        trial_balance = data['report']['payment_statistics']['trial_balance']
-        sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
-        sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
-        date = data['date']
-
-        # Get the category to which the current payment record belongs 
-        category = payment_record.subscription_record.subscription_type.category
-
-        # Add payment_record.amount to the sum_of_total_payment
-        sum_of_total_payment -= payment_record.amount.to_i
-        category_profit = payment_record.subscription_record.subscription_type.profit
-
-
-        #calculate the profit for the current payment_record
-        profit_from_current_payment = (category_profit*(payment_record.amount / payment_record.subscription_record.cost)).to_i
-
-        # Add the calculated profit to the sum_of_total_profit
-        sum_of_total_profit -= profit_from_current_payment
-   
-        # Add the payment record amount to the corresponding category in the sum_of_category_payment hash
-        if sum_of_category_payment.key?(category)
-            sum_of_category_payment[category] -= payment_record.amount.to_i
-        end
-
-        # Add the profit for the current payment record to the corresponding category in the sum_of_category_profit hash
-        if sum_of_category_profit.key?(category)
-            sum_of_category_profit[category] -= profit_from_current_payment.to_i
-        end
-
-        # Add the payment record amount to the trial balance
-        trial_balance = trial_balance.to_i
-        trial_balance -= payment_record.amount.to_i
-
-        daily_report.update(
-            data: {
-                date: date,
-                report: {
-                    payment_statistics: {
-                        sum_of_total_payment: sum_of_total_payment,
-                        sum_of_category_payment: sum_of_category_payment,
-                        sum_of_expenses: sum_of_expenses,
-                        trial_balance: trial_balance
-                    },
-                    profit_statistics: {
-                        sum_of_total_profit: sum_of_total_profit,
-                        sum_of_category_profit: sum_of_category_profit
-                    }
-                },
-                report_type: 'Daily'
-            }
-        )
-
-    end
-      
-  
 end
   
