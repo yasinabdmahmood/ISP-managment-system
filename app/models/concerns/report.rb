@@ -4,6 +4,7 @@ module Report
 
     # data: {
     #     date: payment_date,
+    #     sub_type_counter: {},
     #     report: {
     #         payment_statistics: {
     #             sum_of_total_payment: 0,
@@ -64,6 +65,7 @@ module Report
             trial_balance: data['report']['payment_statistics']['trial_balance'],
             sum_of_total_profit: data['report']['profit_statistics']['sum_of_total_profit'],
             sum_of_category_profit: data['report']['profit_statistics']['sum_of_category_profit'],
+            sub_type_counter: data['sub_type_counter'],
             date: data['date']
         }
         result = [];
@@ -182,13 +184,18 @@ module Report
 
         data = daily_report.data
 
-        sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
-        sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
-        sum_of_expenses = data['report']['payment_statistics']['sum_of_expenses']
-        trial_balance = data['report']['payment_statistics']['trial_balance']
-        sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
-        sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
-        date = data['date']
+        sum_of_total_payment,
+        sum_of_category_payment,
+        trial_balance,
+        sum_of_total_profit,
+        sum_of_category_profit = extract_daily_report_data(data,[:sum_of_total_payment, :sum_of_category_payment, :trial_balance, :sum_of_total_profit, :sum_of_category_profit])
+        
+        # sum_of_total_payment = data['report']['payment_statistics']['sum_of_total_payment']
+        # sum_of_category_payment = data['report']['payment_statistics']['sum_of_category_payment']
+        # sum_of_expenses = data['report']['payment_statistics']['sum_of_expenses']
+        # trial_balance = data['report']['payment_statistics']['trial_balance']
+        # sum_of_total_profit = data['report']['profit_statistics']['sum_of_total_profit']
+        # sum_of_category_profit = data['report']['profit_statistics']['sum_of_category_profit']
 
         # Get the category to which the current payment record belongs 
         category = payment_record.subscription_record.subscription_type.category
@@ -218,25 +225,62 @@ module Report
         trial_balance = trial_balance.to_i
         trial_balance -= payment_record.amount.to_i
 
-        daily_report.update(
-            data: {
-                date: date,
-                report: {
-                    payment_statistics: {
-                        sum_of_total_payment: sum_of_total_payment,
-                        sum_of_category_payment: sum_of_category_payment,
-                        sum_of_expenses: sum_of_expenses,
-                        trial_balance: trial_balance
-                    },
-                    profit_statistics: {
-                        sum_of_total_profit: sum_of_total_profit,
-                        sum_of_category_profit: sum_of_category_profit
-                    }
-                },
-                report_type: 'Daily'
-            }
-        )
+        # update the data field of the daily report
+        data = updateDailyReportDataByKey(data, {:sum_of_total_payment => sum_of_total_payment, :sum_of_category_payment => sum_of_category_payment, :trial_balance => trial_balance, :sum_of_total_profit => sum_of_total_profit, :sum_of_category_profit => sum_of_category_profit})
+        daily_report.update(data: data)
+        # daily_report.update(
+        #     data: {
+        #         date: date,
+        #         report: {
+        #             payment_statistics: {
+        #                 sum_of_total_payment: sum_of_total_payment,
+        #                 sum_of_category_payment: sum_of_category_payment,
+        #                 sum_of_expenses: sum_of_expenses,
+        #                 trial_balance: trial_balance
+        #             },
+        #             profit_statistics: {
+        #                 sum_of_total_profit: sum_of_total_profit,
+        #                 sum_of_category_profit: sum_of_category_profit
+        #             }
+        #         },
+        #         report_type: 'Daily'
+        #     }
+        # )
 
+    end
+
+    def add_current_sub_record_to_belonged_daily_report(daily_report,sub_record)
+        # this method takes the daily report and the subscription record
+        # and updates the sub_type_counter field of the daily report
+        # by adding the given subscription record
+
+        data = daily_report.data
+        sub_type_counter, = extract_daily_report_data(data,[:sub_type_counter])
+        sub_type = sub_record.subscription_type.category
+        if sub_type_counter.key?(sub_type)
+            sub_type_counter[sub_type] += 1
+        else
+            sub_type_counter[sub_type] = 1
+        end
+        data = updateDailyReportDataByKey(data, {:sub_type_counter => sub_type_counter})
+        daily_report.update(data: data)
+    end
+
+    def remove_current_sub_record_from_belonging_daily_report(daily_report,sub_record)
+        # this method takes the daily report and the subscription record
+        # and updates the sub_type_counter field of the daily report
+        # by removing the given subscription record
+
+        data = daily_report.data
+        sub_type_counter, = extract_daily_report_data(data,[:sub_type_counter])
+        sub_type = sub_record.subscription_type.category
+        if sub_type_counter.key?(sub_type)
+            sub_type_counter[sub_type] -= 1
+        else
+            sub_type_counter[sub_type] = 0
+        end
+        data = updateDailyReportDataByKey(data, {:sub_type_counter => sub_type_counter})
+        daily_report.update(data: data)
     end
   end
   

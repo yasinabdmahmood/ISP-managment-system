@@ -1,9 +1,10 @@
 class SubscriptionRecord < ApplicationRecord
+    include Report
 
-    after_create :save_new_record_to_activity
-    after_destroy :save_deleted_record_to_activity
+    after_create :excute_after_sub_record_creation_callbacks
+    after_destroy :excute_after_sub_record_deletion_callbacks
     after_update :save_record_changes_to_activity
-
+    
     after_update :update_is_fully_paid
 
     belongs_to :client
@@ -16,6 +17,27 @@ class SubscriptionRecord < ApplicationRecord
     validate :check_for_overpay
 
     private
+
+    def excute_after_sub_record_creation_callbacks
+
+        save_new_record_to_activity
+
+        update_daily_report(self,'add_sub_record')
+
+    end
+
+    def excute_after_sub_record_deletion_callbacks
+        save_deleted_record_to_activity
+        update_daily_report(self,'delete_sub_record')
+    end
+
+    def update_daily_report(sub_record,action)
+        sub_date = sub_record.created_at.to_date
+        daily_report = DailyReport.find_by(created_at: sub_date.beginning_of_day..sub_date.end_of_day)
+        daily_report = create_empty_daily_record_for_current_payment(sub_date) if daily_report.nil?
+        add_current_sub_record_to_belonged_daily_report(daily_report,sub_record) if action == 'add_sub_record'
+        remove_current_sub_record_from_belonging_daily_report(daily_report,sub_record) if action == 'delete_sub_record'
+    end
 
     def update_is_fully_paid
         subscription_fee = self.subscription_type.cost
