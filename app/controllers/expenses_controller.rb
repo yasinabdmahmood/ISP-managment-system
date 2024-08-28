@@ -7,6 +7,30 @@ class ExpensesController < ApplicationController
     }
   end
 
+  def get_searched_expenses
+    start_day = params[:start_day].to_i
+    start_month = params[:start_month].to_i
+    start_year = params[:start_year].to_i
+    end_day = params[:end_day].to_i
+    end_month = params[:end_month].to_i
+    end_year = params[:end_year].to_i
+    start_date = Date.new(start_year, start_month, start_day) 
+    end_date = Date.new(end_year, end_month, end_day)       
+  
+    # Convert the dates to the beginning of the start_date and end of the end_date
+    start_datetime = start_date.beginning_of_day
+    end_datetime = end_date.end_of_day
+  
+    # Query the expenses between the start_datetime and end_datetime
+    expenses = Expense.where(created_at: start_datetime..end_datetime)
+                      .includes(:account_option, :employee)
+                      
+    render json: expenses, include: { 
+      account_option: { only: [:id, :options] },
+      employee: { only: [:name] },  
+    }
+  end
+
   def get_pending_expenses
     expenses = Expense.where(status: 'pending')
                       .order(created_at: :desc)

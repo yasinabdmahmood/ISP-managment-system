@@ -91,6 +91,7 @@ Rails.application.routes.draw do
 
   # Expense related routes
   get 'expenses/get_pending_expenses' => 'expenses#get_pending_expenses', as: 'get_pending_expenses'
+  get 'expenses/get_searched_expenses' => 'expenses#get_searched_expenses', as: 'get_searched_expenses'
   get 'expenses/get_expenses' => 'expenses#get_expenses', as: 'get_expenses'
   get 'expenses/get_account_options' => 'expenses#get_account_options', as: 'get_account_options'
   get 'expenses/create_account_options' => 'expenses#create_account_options', as: 'create_account_options'
