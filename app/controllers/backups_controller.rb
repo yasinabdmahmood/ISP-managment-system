@@ -19,7 +19,7 @@ class BackupsController < ApplicationController
     end
 
     # Send the CSV file as a response
-    send_data csv_data, filename: 'subscription_types.csv', type: 'text/csv'
+    send_data csv_data, filename: 'subscription_types.csv', type: 'text/csv; charset=UTF-8'
   end
   
   def download_subscription_records_as_csv
@@ -88,5 +88,45 @@ class BackupsController < ApplicationController
 
     # Send the CSV file as a response
     send_data csv_data, filename: 'subscription_types.csv', type: 'text/csv'
+  end
+
+  def download_searched_expenses_as_csv
+    start_day = params[:start_day].to_i
+    start_month = params[:start_month].to_i
+    start_year = params[:start_year].to_i
+    end_day = params[:end_day].to_i
+    end_month = params[:end_month].to_i
+    end_year = params[:end_year].to_i
+    start_date = Date.new(start_year, start_month, start_day) 
+    end_date = Date.new(end_year, end_month, end_day)       
+
+    # Convert the dates to the beginning of the start_date and end of the end_date
+    start_datetime = start_date.beginning_of_day
+    end_datetime = end_date.end_of_day
+
+    # Query the expenses between the start_datetime and end_datetime
+    expenses = Expense.where(created_at: start_datetime..end_datetime)
+                      .includes(:account_option, :employee)
+
+    # Generate CSV data
+    bom = "\uFEFF"
+    csv_data = bom+  CSV.generate(encoding: 'UTF-8') do |csv|
+      # Write headers
+      csv << ['Employee', 'Amount', 'Remark', 'Status', 'account_option', 'Created At']
+
+      # Write data rows
+      expenses.each do |row|
+        csv << [
+          row.employee.name.to_s.encode('UTF-8'),
+          row.amount.to_s.encode('UTF-8'),
+          row.remark.to_s.encode('UTF-8'),
+          row.status.to_s.encode('UTF-8'), 
+          row.account_option.options.to_s.encode('UTF-8'), 
+          row.created_at.to_s.encode('UTF-8')]
+      end
+    end
+
+    # Send the CSV file as a response
+    send_data csv_data, filename: 'searched_expenses.csv', type: 'text/csv'
   end
 end
