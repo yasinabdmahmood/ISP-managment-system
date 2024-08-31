@@ -34,6 +34,7 @@ class DailyReport < ApplicationRecord
         current_monthly_report = MonthlyReport.create(
                 data: {
                     date: date,
+                    sub_type_counter: {},
                     report: {
                         payment_statistics: {
                             sum_of_total_payment: 0,
@@ -71,6 +72,7 @@ class DailyReport < ApplicationRecord
         daily_sum_of_category_payment = daily_data['report']['payment_statistics']['sum_of_category_payment']
         daily_sum_of_total_profit = daily_data['report']['profit_statistics']['sum_of_total_profit']
         daily_sum_of_category_profit = daily_data['report']['profit_statistics']['sum_of_category_profit']
+        daily_sub_type_counter = daily_data['report']['sub_type_counter']
 
         monthly_sum_of_total_payment = monthly_data['report']['payment_statistics']['sum_of_total_payment']
         monthly_sum_of_expenses = monthly_data['report']['payment_statistics']['sum_of_expenses']
@@ -78,19 +80,22 @@ class DailyReport < ApplicationRecord
         monthly_sum_of_category_payment = monthly_data['report']['payment_statistics']['sum_of_category_payment']
         monthly_sum_of_total_profit = monthly_data['report']['profit_statistics']['sum_of_total_profit']
         monthly_sum_of_category_profit = monthly_data['report']['profit_statistics']['sum_of_category_profit']
+        monthly_sub_type_counter = monthly_data['report']['sub_type_counter']
         monthly_date = monthly_report['data']['date']
         # byebug
         monthly_sum_of_total_payment += daily_sum_of_total_payment
         monthly_sum_of_total_profit += daily_sum_of_total_profit
         monthly_sum_of_expenses += daily_sum_of_expense
         monthly_trial_balance += daily_trial_balance
-
+        
         monthly_sum_of_category_payment = merge_and_sum_reports(monthly_sum_of_category_payment, daily_sum_of_category_payment)
         monthly_sum_of_category_profit = merge_and_sum_reports(monthly_sum_of_category_profit, daily_sum_of_category_profit)
+        monthly_sub_type_counter = merge_and_sum_reports(monthly_sub_type_counter, daily_sub_type_counter)
 
         monthly_report.update(
                 data: {
                     date: monthly_date,
+                    sub_type_counter: monthly_sub_type_counter,
                     report: {
                         payment_statistics: {
                             sum_of_total_payment: monthly_sum_of_total_payment,
