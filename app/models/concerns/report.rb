@@ -65,7 +65,7 @@ module Report
             trial_balance: data['report']['payment_statistics']['trial_balance'],
             sum_of_total_profit: data['report']['profit_statistics']['sum_of_total_profit'],
             sum_of_category_profit: data['report']['profit_statistics']['sum_of_category_profit'],
-            sub_type_counter: data['sub_type_counter'],
+            sub_type_counter: data['report']['sub_type_counter'],
             date: data['date']
         }
         result = [];
@@ -101,8 +101,8 @@ module Report
         daily_report = DailyReport.create(
                 data: {
                     date: payment_date,
-                    sub_type_counter: {},
                     report: {
+                        sub_type_counter: {},
                         payment_statistics: {
                             sum_of_total_payment: 0,
                             sum_of_expenses: 0,

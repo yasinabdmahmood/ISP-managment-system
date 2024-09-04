@@ -34,8 +34,8 @@ class DailyReport < ApplicationRecord
         current_monthly_report = MonthlyReport.create(
                 data: {
                     date: date,
-                    sub_type_counter: {},
                     report: {
+                        sub_type_counter: {},
                         payment_statistics: {
                             sum_of_total_payment: 0,
                             sum_of_expenses: 0,
@@ -95,8 +95,8 @@ class DailyReport < ApplicationRecord
         monthly_report.update(
                 data: {
                     date: monthly_date,
-                    sub_type_counter: monthly_sub_type_counter,
                     report: {
+                        sub_type_counter: monthly_sub_type_counter,
                         payment_statistics: {
                             sum_of_total_payment: monthly_sum_of_total_payment,
                             sum_of_expenses: monthly_sum_of_expenses,
