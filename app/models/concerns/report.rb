@@ -90,17 +90,17 @@ module Report
         data['report']['payment_statistics']['sum_of_expenses'] = keys[:sum_of_expenses].to_i if keys.key?(:sum_of_expenses)
         data['report']['payment_statistics']['trial_balance'] = keys[:trial_balance].to_i if keys.key?(:trial_balance)
         data['report']['profit_statistics']['sum_of_total_profit'] = keys[:sum_of_total_profit].to_i if keys.key?(:sum_of_total_profit)     
-        data['report']['profit_statistics']['sum_of_category_profit'] = keys[:sum_of_category_payment] if keys.key?(:sum_of_category_profit)        
+        data['report']['profit_statistics']['sum_of_category_profit'] = keys[:sum_of_category_profit] if keys.key?(:sum_of_category_profit)        
         data['report']['sub_type_counter'] = keys[:sub_type_counter] if keys.key?(:sub_type_counter)
-        data['date'] = keys[:sum_of_category_payment] if keys.key?(:date)
+        data['date'] = keys[:date] if keys.key?(:date)
         data
     end
 
-    def create_empty_daily_record_for_current_payment(payment_date)
+    def create_empty_daily_record_for_current_payment(time_obj)
         # this method creates a new daily report for the given payment date
         daily_report = DailyReport.create(
                 data: {
-                    date: payment_date,
+                    date: time_obj.to_date.to_s,
                     report: {
                         sub_type_counter: {},
                         payment_statistics: {
@@ -177,9 +177,18 @@ module Report
         # this method takes the payment record that is going to be deleted
         # and removes it from the daily report
 
+        if Time.zone.now.to_date != payment_record.created_at.to_date
+            p 'no need to update daily reportttttttttttttt'
+            p '00000000000000000000'
+            return
+        else
+            p 'need to update daily reportttttttttttttt'
+            p '1111111111111111111111111'
+        end
+
         payment_date = payment_record.created_at.to_date
   
-        daily_report = DailyReport.find_by(created_at: payment_date.beginning_of_day..payment_date.end_of_day)
+        daily_report = DailyReport.last
 
 
         data = daily_report.data

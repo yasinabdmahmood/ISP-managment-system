@@ -28,13 +28,17 @@ class SubscriptionRecord < ApplicationRecord
 
     def excute_after_sub_record_deletion_callbacks
         save_deleted_record_to_activity
-        # update_daily_report(self,'delete_sub_record')
+        update_daily_report(self,'delete_sub_record')
     end
 
     def update_daily_report(sub_record,action)
-        sub_date = sub_record.created_at.to_date
-        daily_report = DailyReport.find_by(created_at: sub_date.beginning_of_day..sub_date.end_of_day)
-        daily_report = create_empty_daily_record_for_current_payment(DateTime.now) if daily_report.nil?
+        today = Time.zone.now.to_date
+        if sub_record.created_at.to_date != today && action == 'delete_sub_record'
+            p 'no need to update daily report'
+            return
+        end
+        daily_report = DailyReport.last
+        daily_report = create_empty_daily_record_for_current_payment(Time.zone.now) if daily_report.created_at.to_date != today
         add_current_sub_record_to_belonged_daily_report(daily_report,sub_record) if action == 'add_sub_record'
         remove_current_sub_record_from_belonging_daily_report(daily_report,sub_record) if action == 'delete_sub_record'
     end

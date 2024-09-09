@@ -84,9 +84,11 @@ class PaymentRecord < ApplicationRecord
     # }
 
     def update_daily_report
-        payment_date = self.created_at.to_date
-        daily_report = DailyReport.find_by(created_at: payment_date.beginning_of_day..payment_date.end_of_day)
-        daily_report = create_empty_daily_record_for_current_payment(payment_date) if daily_report.nil?
+        today = Time.zone.now.to_date
+        daily_report = DailyReport.last
+        if daily_report.created_at.to_date != today 
+          daily_report = create_empty_daily_record_for_current_payment(Time.zone.now) 
+        end
         add_current_payment_to_belonged_daily_report(daily_report,self)
     end
 
