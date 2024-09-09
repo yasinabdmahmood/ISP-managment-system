@@ -93,6 +93,12 @@ class ExpensesController < ApplicationController
 
   def update_expense_status
     #param = {id,newStatus}
+    
+    # check if the current employee is admin_plus
+    if @current_employee.role != 'admin_plus'
+      render json: {message: 'You are not authorized to perform this action'}, status: 401
+      return
+    end
     id = params[:id]
     newStatus = params[:newStatus]
     expense = Expense.find(id)
