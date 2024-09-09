@@ -16,5 +16,6 @@ task task13: :environment do
            p daily_report.data
         else
            p 'fail to update'
-      end
+        end
+    end
 end
