@@ -5,10 +5,12 @@ class DailyReport < ApplicationRecord
     belongs_to :monthly_report, optional: true
 
     after_create :excute_after_daily_report_creation_callbacks
+    after_update :save_record_changes_to_activity
 
     private
 
     def excute_after_daily_report_creation_callbacks
+        save_new_record_to_activity
         last_monthly_report = MonthlyReport.last 
         current_month = self.created_at.month
         if last_monthly_report.nil? || last_monthly_report.created_at.month != current_month
@@ -26,6 +28,26 @@ class DailyReport < ApplicationRecord
         end
 
         add_previous_daily_report_to_monthly_report
+    end
+
+    def save_record_changes_to_activity
+        changes_made = self.saved_changes
+        json_data = {
+            data: self.data,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+        }
+        merged_hash = json_data.merge(changes_made)
+        create_activity_record(action_type: 'update' ,table_name: 'Daily report' ,json_data: merged_hash)
+    end
+
+    def save_new_record_to_activity
+        json_data = {
+            data: self.data,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+        }
+        create_activity_record(action_type: 'create' ,table_name: 'Daily Report' ,json_data: json_data)
     end
 
     def create_new_monthly_report
@@ -125,6 +147,16 @@ class DailyReport < ApplicationRecord
         end
     
         result
+    end
+
+
+    def create_activity_record( action_type: ,table_name: ,json_data: )
+        Activity.create(
+            employee_name: Current.employee.name,
+            action_type: action_type,
+            table_name: table_name,
+            json_data: json_data.to_json
+        )
     end
   
 end
