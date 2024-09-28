@@ -48,6 +48,6 @@ class SubscriptionTypesController < ApplicationController
   private
 
   def subscription_type_params
-    params.require(:new_subscription_type).permit(:category, :cost, :profit)
+    params.require(:new_subscription_type).permit(:category, :cost, :profit, :enable)
   end
 end

@@ -2,7 +2,7 @@ class SubscriptionType < ApplicationRecord
     
     has_many :subscription_records
     
-    validates_associated :subscription_records
+    
     validates :category, presence: true, uniqueness: true
     validates :cost, presence: true, numericality: { greater_than_or_equal_to: 0 }
     validates :profit, presence: true, numericality: { greater_than_or_equal_to: 0 }
@@ -18,6 +18,7 @@ class SubscriptionType < ApplicationRecord
                 category: self.category,
                 cost: self.cost,
                 profit: self.profit,
+                enable: self.enable,
                 created_at: self.created_at,
                 updated_at: self.updated_at,
             }
@@ -30,6 +31,7 @@ class SubscriptionType < ApplicationRecord
                 category: self.category,
                 cost: self.cost,
                 profit: self.profit,
+                enable: self.enable,
                 created_at: self.created_at,
                 updated_at: self.updated_at,
             }
@@ -42,6 +44,7 @@ class SubscriptionType < ApplicationRecord
                 category: self.category,
                 cost: self.cost,
                 profit: self.profit,
+                enable: self.enable,
                 created_at: self.created_at,
                 updated_at: self.updated_at,
             }
