@@ -1,6 +1,8 @@
 class SubscriptionRecord < ApplicationRecord
     include Report
-
+    
+    before_create :set_actual_creation_time_to_current_time
+    before_destroy :check_if_deletable
     after_create :excute_after_sub_record_creation_callbacks
     after_destroy :excute_after_sub_record_deletion_callbacks
     after_update :save_record_changes_to_activity
@@ -17,6 +19,17 @@ class SubscriptionRecord < ApplicationRecord
     validate :check_for_overpay
 
     private
+
+    def check_if_deletable  
+        if self.actual_creation_time.to_date != Time.zone.now.to_date   
+            errors.add(:base, "Cannot delete payment record from previous days")    
+            throw(:abort)
+        end
+    end
+
+    def set_actual_creation_time_to_current_time    
+        self.actual_creation_time = Time.zone.now
+    end
 
     def excute_after_sub_record_creation_callbacks
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_06_185658) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_02_103521) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -126,6 +126,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_06_185658) do
     t.decimal "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "actual_creation_time", precision: nil
     t.index ["created_at"], name: "index_payment_records_on_created_at"
     t.index ["employee_id"], name: "index_payment_records_on_employee_id"
     t.index ["subscription_record_id"], name: "index_payment_records_on_subscription_record_id"
@@ -143,6 +144,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_06_185658) do
     t.decimal "cost"
     t.string "category"
     t.string "assigned_employee"
+    t.datetime "actual_creation_time"
     t.index ["client_id"], name: "index_subscription_records_on_client_id"
     t.index ["employee_id"], name: "index_subscription_records_on_employee_id"
     t.index ["subscription_type_id"], name: "index_subscription_records_on_subscription_type_id"

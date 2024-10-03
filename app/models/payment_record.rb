@@ -4,7 +4,8 @@ require 'json'
 class PaymentRecord < ApplicationRecord
     include Report
     # after_create :update_associated_subscription_record
-
+    before_create :set_actual_creation_time_to_current_time
+    before_destroy :check_if_deletable
     after_create :excute_after_payment_record_creation_callbacks
     after_destroy :excute_after_payment_record_deletion_callbacks
     # after_destroy :save_deleted_record_to_activity
@@ -18,6 +19,17 @@ class PaymentRecord < ApplicationRecord
     validates :amount, numericality: true, presence: true
 
     private
+
+    def check_if_deletable  
+        if self.actual_creation_time.to_date != Time.zone.now.to_date   
+            errors.add(:base, "Cannot delete payment record from previous days")    
+            throw(:abort)
+        end
+    end
+
+    def set_actual_creation_time_to_current_time    
+        self.actual_creation_time = Time.zone.now
+    end
 
     def excute_after_payment_record_creation_callbacks
 
