@@ -27,9 +27,7 @@ class SubscriptionRecord < ApplicationRecord
         end
     end
 
-    def set_actual_creation_time_to_current_time 
-        p self
-        p '00000000000000000000000000'   
+    def set_actual_creation_time_to_current_time    
         self.actual_creation_time = Time.zone.now
     end
 
