@@ -119,7 +119,7 @@ class SubscriptionRecordsController < ApplicationController
     if @subscription_record.destroy
       render json: {message: 'success', id: params[:id]}, status: 200
     else
-      rendef json: { mesage: 'error'}, status: 400
+      render json: { mesage: 'error'}, status: 400
     end
   end
 
