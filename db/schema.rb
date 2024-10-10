@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_02_103521) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_04_211838) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_02_103521) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "monthly_report_id"
+    t.date "date"
+    t.index ["date"], name: "index_daily_reports_on_date", unique: true
     t.index ["monthly_report_id"], name: "index_daily_reports_on_monthly_report_id"
   end
 
@@ -118,6 +120,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_02_103521) do
     t.jsonb "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "date"
+    t.index ["date"], name: "index_monthly_reports_on_date", unique: true
   end
 
   create_table "payment_records", force: :cascade do |t|

@@ -21,9 +21,9 @@ module Report
     # }
 
   
-    def add_current_expense_to_belonged_daily_report(expense,daily_report)
+    def add_expense_to_report(expense,report)
         # extract the data field from the given daily report object 
-        data = daily_report.data
+        data = report.data
         
         # Extract the amount filed of the given expense record object
         amount = expense.amount
@@ -47,7 +47,7 @@ module Report
         # updated_data['report']['payment_statistics']['trial_balance'] = trial_balance.to_i
         
 
-        daily_report.update(data: data)
+        report.update(data: data)
         
     end
 
@@ -72,7 +72,7 @@ module Report
         requested_fields.each do |element|
         result << all_fields[element]
         end
-        result
+        result 
     end
 
     def updateDailyReportDataByKey(data, keys)
@@ -96,37 +96,38 @@ module Report
         data
     end
 
-    def create_empty_daily_record_for_current_payment(time_obj)
+    def create_empty_record(type,date)
         # this method creates a new daily report for the given payment date
-        daily_report = DailyReport.create(
-                data: {
-                    date: time_obj.to_date.to_s,
-                    report: {
-                        sub_type_counter: {},
-                        payment_statistics: {
-                            sum_of_total_payment: 0,
-                            sum_of_expenses: 0,
-                            trial_balance: 0,
-                            sum_of_category_payment: {}
-                        },
-                        profit_statistics: {
-                            sum_of_total_profit: 0,
-                            sum_of_category_profit: {}
-                        }
-                    },
-                    report_type: 'Daily'
+        data =  {
+            date: date.to_s,
+            report: {
+                sub_type_counter: {},
+                payment_statistics: {
+                    sum_of_total_payment: 0,
+                    sum_of_expenses: 0,
+                    trial_balance: 0,
+                    sum_of_category_payment: {}
+                },
+                profit_statistics: {
+                    sum_of_total_profit: 0,
+                    sum_of_category_profit: {}
                 }
-        )
-        daily_report
+            },
+        }
+        if type === 'daily_report' 
+            return DailyReport.create(date: date, data: data)
+        end
+        if type === 'monthly_report'
+            return MonthlyReport.create(date: date.beginning_of_month, data: data)
+        end
     end 
 
-    def add_current_payment_to_belonged_daily_report(daily_report, payment_record)
+    def add_payment_to_report(report, payment_record)
         # this method takes the daily report and the payment record and
         # adds the payment record to the daily report and updates the daily report
-        
         # extract the data field from the given daily report object
-        data = daily_report.data
-        
+        data = report.data
+    
         # Extract the keys from the data field of the daily report
         # that needs to be updated
         sum_of_total_payment,
@@ -170,28 +171,15 @@ module Report
 
         # update the data field of the daily report
         data = updateDailyReportDataByKey(data, {:sum_of_total_payment => sum_of_total_payment, :sum_of_category_payment => sum_of_category_payment, :trial_balance => trial_balance, :sum_of_total_profit => sum_of_total_profit, :sum_of_category_profit => sum_of_category_profit})
-        daily_report.update(data: data)
+        report.update(data: data)
     end
 
-    def remove_current_payment_from_daily_report(payment_record)
+    def remove_payment_from_report(payment_record,report)
         # this method takes the payment record that is going to be deleted
         # and removes it from the daily report
-
-        if Time.zone.now.to_date != payment_record.created_at.to_date
-            p 'no need to update daily reportttttttttttttt'
-            p '00000000000000000000'
-            return
-        else
-            p 'need to update daily reportttttttttttttt'
-            p '1111111111111111111111111'
-        end
-
-        payment_date = payment_record.created_at.to_date
-  
-        daily_report = DailyReport.last
-
-
-        data = daily_report.data
+        
+       
+        data = report.data
 
         sum_of_total_payment,
         sum_of_category_payment,
@@ -236,7 +224,7 @@ module Report
 
         # update the data field of the daily report
         data = updateDailyReportDataByKey(data, {:sum_of_total_payment => sum_of_total_payment, :sum_of_category_payment => sum_of_category_payment, :trial_balance => trial_balance, :sum_of_total_profit => sum_of_total_profit, :sum_of_category_profit => sum_of_category_profit})
-        daily_report.update(data: data)
+        report.update(data: data)
         # daily_report.update(
         #     data: {
         #         date: date,
@@ -258,12 +246,12 @@ module Report
 
     end
 
-    def add_current_sub_record_to_belonged_daily_report(daily_report,sub_record)
+    def add_subscription_to_report(report,sub_record)
         # this method takes the daily report and the subscription record
         # and updates the sub_type_counter field of the daily report
         # by adding the given subscription record
 
-        data = daily_report.data
+        data = report.data
         sub_type_counter, = extract_daily_report_data(data,[:sub_type_counter])
         sub_type = sub_record.subscription_type.category
         if sub_type_counter.key?(sub_type)
@@ -272,15 +260,15 @@ module Report
             sub_type_counter[sub_type] = 1
         end
         data = updateDailyReportDataByKey(data, {:sub_type_counter => sub_type_counter})
-        daily_report.update(data: data)
+        report.update(data: data)
     end
 
-    def remove_current_sub_record_from_belonging_daily_report(daily_report,sub_record)
+    def remove_subscription_from_report(report,sub_record)
         # this method takes the daily report and the subscription record
         # and updates the sub_type_counter field of the daily report
         # by removing the given subscription record
 
-        data = daily_report.data
+        data = report.data
         sub_type_counter, = extract_daily_report_data(data,[:sub_type_counter])
         sub_type = sub_record.subscription_type.category
         if sub_type_counter.key?(sub_type)
@@ -289,7 +277,7 @@ module Report
             sub_type_counter[sub_type] = 0
         end
         data = updateDailyReportDataByKey(data, {:sub_type_counter => sub_type_counter})
-        daily_report.update(data: data)
+        report.update(data: data)
     end
   end
   

@@ -36,24 +36,30 @@ class SubscriptionRecord < ApplicationRecord
         save_new_record_to_activity
 
         update_daily_report(self,'add_sub_record')
+        update_monthly_report(self,'add_sub_record')
 
     end
 
     def excute_after_sub_record_deletion_callbacks
         save_deleted_record_to_activity
         update_daily_report(self,'delete_sub_record')
+        update_monthly_report(self,'delete_sub_record')
     end
 
     def update_daily_report(sub_record,action)
         today = Time.zone.now.to_date
-        if sub_record.created_at.to_date != today && action == 'delete_sub_record'
-            p 'no need to update daily report'
-            return
-        end
         daily_report = DailyReport.last
-        daily_report = create_empty_daily_record_for_current_payment(Time.zone.now) if daily_report.created_at.to_date != today
-        add_current_sub_record_to_belonged_daily_report(daily_report,sub_record) if action == 'add_sub_record'
-        remove_current_sub_record_from_belonging_daily_report(daily_report,sub_record) if action == 'delete_sub_record'
+        daily_report = create_empty_record('daily_report',Time.zone.now.to_date) if daily_report.created_at.to_date != today
+        add_subscription_to_report(daily_report,sub_record) if action == 'add_sub_record'
+        remove_subscription_from_report(daily_report,sub_record) if action == 'delete_sub_record'
+    end
+
+    def update_monthly_report(sub_record,action)
+        date = sub_record.actual_creation_time.to_date
+        monthly_report = MonthlyReport.find_by(date: date.beginning_of_month)
+        monthly_report = create_empty_record('monthly_report',date.beginning_of_month) if monthly_report.nil?
+        add_subscription_to_report(monthly_report,sub_record) if action == 'add_sub_record'
+        remove_subscription_from_report(monthly_report,sub_record) if action == 'delete_sub_record'
     end
 
     def update_is_fully_paid

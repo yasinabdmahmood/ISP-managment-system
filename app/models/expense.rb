@@ -36,13 +36,12 @@ class Expense < ApplicationRecord
 
     def update_daily_report
         if saved_change_to_status? && status == 'approved'
-            expense_date = Time.zone.now
+            expense_date = Date.today
             # daily_report = DailyReport.find_by(created_at: expense_date.beginning_of_day..expense_date.end_of_day)
-            daily_report = DailyReport.last
-            daily_report_date = daily_report.created_at.to_date
-            if daily_report_date == expense_date.to_date
-            add_current_expense_to_belonged_daily_report(self,daily_report) if daily_report.present?
-            end
+            daily_report = DailyReport.find_by(date: expense_date)
+            monthly_report = MonthlyReport.find_by(date: expense_date.beginning_of_month)
+            add_expense_to_report(self,daily_report) if daily_report.present?
+            add_expense_to_report(self,monthly_report) if monthly_report.present?
         end
     end
 

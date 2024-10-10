@@ -36,12 +36,17 @@ class PaymentRecord < ApplicationRecord
         save_new_record_to_activity
 
         update_daily_report
+        update_monthly_report
 
     end
 
     def excute_after_payment_record_deletion_callbacks
         save_deleted_record_to_activity
-        remove_current_payment_from_daily_report(self)
+        payment_date = self.actual_creation_time.to_date
+        daily_report = DailyReport.find_by(date: payment_date)
+        monthly_report = daily_report.monthly_report
+        remove_payment_from_report(self,daily_report)
+        remove_payment_from_report(self,monthly_report)
     end
 
     def check_for_overpay
@@ -96,12 +101,21 @@ class PaymentRecord < ApplicationRecord
     # }
 
     def update_daily_report
-        today = Time.zone.now.to_date
-        daily_report = DailyReport.last
-        if daily_report.created_at.to_date != today 
-          daily_report = create_empty_daily_record_for_current_payment(Time.zone.now) 
+        payment_date = self.actual_creation_time.to_date
+        daily_report = DailyReport.find_by(date: payment_date)
+        if daily_report.nil? 
+          daily_report = create_empty_record('daily_report',Date.today) 
         end
-        add_current_payment_to_belonged_daily_report(daily_report,self)
+        add_payment_to_report(daily_report,self)
+    end
+
+    def update_monthly_report
+        payment_date = self.actual_creation_time.to_date
+        monthly_report = MonthlyReport.find_by(date: payment_date.beginning_of_month)
+        if monthly_report.nil? 
+            monthly_report = create_empty_record('monthly_report',Date.today.beginning_of_month) 
+        end
+        add_payment_to_report(monthly_report,self)
     end
 
     def save_deleted_record_to_activity

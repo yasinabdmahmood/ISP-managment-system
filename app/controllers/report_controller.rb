@@ -5,12 +5,11 @@ class ReportController < ApplicationController
         year = params[:date][:year].to_i
         month = params[:date][:month].to_i
         day = params[:date][:day].to_i
-      
         # Create a Date object for the first day of the specified month and year
         date_to_query = Date.new(year, month, day)
-
+        
         # Find the monthly report created in the specified month and year
-        daily_report = DailyReport.find_by(created_at: date_to_query.beginning_of_day..date_to_query.end_of_day )
+        daily_report = DailyReport.find_by(date: date_to_query )
       
         if daily_report
           render json: daily_report

@@ -1,87 +1,41 @@
-require 'date'
-require 'json'
+desc "task17"
+# Set the date column for daily_reports and monthly_reports to the created_at date
+# for all the records in both table daily_reports and monthly_reports
 
-class DailyReport < ApplicationRecord
-    belongs_to :monthly_report, optional: true
-
-    validates :date, presence: true, uniqueness: true
-
-    after_create :excute_after_daily_report_creation_callbacks
-    after_update :save_record_changes_to_activity
-
-    private
-
-    def excute_after_daily_report_creation_callbacks
-        save_new_record_to_activity
-        daily_report_date = self.date
-        monthly_report = MonthlyReport.find_by(date: daily_report_date.beginning_of_month)
-        
-        if monthly_report.nil?
-            monthly_report = create_new_monthly_report
-        end
-        self.monthly_report = monthly_report
-
-      
-        # I commented the below line because the monthly report is going
-        # to be updated dynamically when new records are added to the daily report
-
-        # add_previous_daily_report_to_monthly_report
-    end
-
-    def save_record_changes_to_activity
-        changes_made = self.saved_changes
-        json_data = {
-            data: self.data,
-            created_at: self.created_at,
-            updated_at: self.updated_at,
-        }
-        merged_hash = json_data.merge(changes_made)
-        create_activity_record(action_type: 'update' ,table_name: 'Daily report' ,json_data: merged_hash)
-    end
-
-    def save_new_record_to_activity
-        json_data = {
-            data: self.data,
-            created_at: self.created_at,
-            updated_at: self.updated_at,
-        }
-        create_activity_record(action_type: 'create' ,table_name: 'Daily Report' ,json_data: json_data)
-    end
-
-    def create_new_monthly_report
-        date = self.date.beginning_of_month
-
-        monthly_report = MonthlyReport.create(
-            date: date,
-            data: {
-                date: date.to_s,
-                report: {
-                    sub_type_counter: {},
-                    payment_statistics: {
-                        sum_of_total_payment: 0,
-                        sum_of_expenses: 0,
-                        trial_balance: 0,
-                        sum_of_category_payment: {}
-                    },
-                    profit_statistics: {
-                        sum_of_total_profit: 0,
-                        sum_of_category_profit: {}
-                    }
+ 
+task task17: :environment do
+    def create_empty_record(type,date)
+        # this method creates a new daily report for the given payment date
+        data =  {
+            date: date.to_s,
+            report: {
+                sub_type_counter: {},
+                payment_statistics: {
+                    sum_of_total_payment: 0,
+                    sum_of_expenses: 0,
+                    trial_balance: 0,
+                    sum_of_category_payment: {}
                 },
+                profit_statistics: {
+                    sum_of_total_profit: 0,
+                    sum_of_category_profit: {}
+                }
             },
-    )
-    monthly_report
-    end
+        }
+        if type === 'daily_report' 
+            return DailyReport.create(date: date, data: data)
+        end
+        if type === 'monthly_report'
+            return MonthlyReport.create(date: date.beginning_of_month, data: data)
+        end
+    end 
 
-    def add_previous_daily_report_to_monthly_report
-        daily_report = DailyReport.find_by(id: self.id - 1)
-        return if daily_report.nil?
-        monthly_report = daily_report.monthly_report
+    def add_daily_report_to_monthly_report(daily_report, monthly_report)
+        daily_report.monthly_report = monthly_report
+
         daily_data = daily_report.data
 
-        if monthly_report.nil?
-            byebug
-        end
+
         monthly_data = monthly_report.data
         
 
@@ -146,14 +100,23 @@ class DailyReport < ApplicationRecord
         result
     end
 
+    start_date = Date.parse('2024-10-01')
+    end_date = Date.parse('2024-10-10')
 
-    def create_activity_record( action_type: ,table_name: ,json_data: )
-        # Activity.create(
-        #     employee_name: Current.employee.name,
-        #     action_type: action_type,
-        #     table_name: table_name,
-        #     json_data: json_data.to_json
-        # )
+
+
+    (start_date..end_date).each do |date|
+        daily_report = DailyReport.find_by(date: date)
+        monthly_report = MonthlyReport.find_by(date: date.beginning_of_month)
+        if monthly_report.nil?
+            monthly_report = create_empty_record('monthly_report', date.beginning_of_month)
+            p monthly_report
+        end
+        add_daily_report_to_monthly_report(daily_report, monthly_report) if !daily_report.nil?
+
     end
-  
+    
+ 
+
 end
+
