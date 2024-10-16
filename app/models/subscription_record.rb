@@ -6,7 +6,8 @@ class SubscriptionRecord < ApplicationRecord
     after_create :excute_after_sub_record_creation_callbacks
     after_destroy :excute_after_sub_record_deletion_callbacks
     after_update :save_record_changes_to_activity
-    before_update :restrict_assigned_employee_updates_for_non_admins, :restrict_created_at_updates_for_non_admins
+    # before_update :restrict_assigned_employee_updates_for_non_admins, :restrict_created_at_updates_for_non_admins
+    before_update :restrict_field_updates_for_non_admins
     after_update :update_is_fully_paid
 
     belongs_to :client
@@ -20,21 +21,30 @@ class SubscriptionRecord < ApplicationRecord
 
     private
 
-    def restrict_assigned_employee_updates_for_non_admins
-        if Current.employee.role == 'employee' && self.assigned_employee_changed?
-            errors.add(:base, "Only admins can update assigned employee")
-            p "Only admins can update assigned employee"
-            throw(:abort)
-        end
+    def restrict_field_updates_for_non_admins
+        if Current.employee.role == 'employee'
+          # Only allow updating the `info` column.
+          # Revert changes to all other columns except `info`.
+          self.assigned_employee = assigned_employee_was if assigned_employee_changed?
+          self.created_at = created_at_was if created_at_changed?
+          # Add any other columns you want to restrict here
     end
 
-    def restrict_created_at_updates_for_non_admins
-        if Current.employee.role == 'employee' && self.created_at_changed?
-            errors.add(:base, "Only admins can update created_at field")
-            p "Only admins can update assigned employee"
-            throw(:abort)
-        end
-    end
+    # def restrict_assigned_employee_updates_for_non_admins
+    #     if Current.employee.role == 'employee' && self.assigned_employee_changed?
+    #         errors.add(:base, "Only admins can update assigned employee")
+    #         p "Only admins can update assigned employee"
+    #         throw(:abort)
+    #     end
+    # end
+
+    # def restrict_created_at_updates_for_non_admins
+    #     if Current.employee.role == 'employee' && self.created_at_changed?
+    #         errors.add(:base, "Only admins can update created_at field")
+    #         p "Only admins can update assigned employee"
+    #         throw(:abort)
+    #     end
+    # end
 
     def check_if_deletable  
         if self.actual_creation_time.to_date != Time.zone.now.to_date   
