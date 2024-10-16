@@ -28,6 +28,7 @@ class SubscriptionRecord < ApplicationRecord
           self.assigned_employee = assigned_employee_was if assigned_employee_changed?
           self.created_at = created_at_was if created_at_changed?
           # Add any other columns you want to restrict here
+        end
     end
 
     # def restrict_assigned_employee_updates_for_non_admins
