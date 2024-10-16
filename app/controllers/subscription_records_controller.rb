@@ -139,6 +139,7 @@ class SubscriptionRecordsController < ApplicationController
       subscription_type: { only: [:category, :cost] } 
     }, status: 200
     else
+      subscription_record.errors.full_messages
       render json: {message: 'error'}, status: 400
     end
   end
