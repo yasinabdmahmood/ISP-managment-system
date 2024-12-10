@@ -161,8 +161,8 @@ class SubscriptionRecordsController < ApplicationController
   end
 
   def assign_employees
-    if current_employee.role != 'admin'
-      render json: { error: 'the curent user is allowed to perform this action' }, status: 400 
+    if current_employee.role == 'employee'
+      render json: { error: 'the curent user is not allowed to perform this action' }, status: 400 
       return
     end
     
