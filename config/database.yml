@@ -86,6 +86,6 @@ test:
 production:
   <<: *default
   
-  database: ISP_managment_system_production
-  username: ISP_managment_system
-  password: <%= ENV["ISP_MANAGMENT_SYSTEM_DATABASE_PASSWORD"] %>
+  database: <%= ENV["DATABASE_NAME"] %>
+  username: <%= ENV["DATABASE_USERNAME"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
